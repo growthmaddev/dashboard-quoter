@@ -1,0 +1,2534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Project Quoter | Growth Mad Consulting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --cyan: #00b8d4;
+      --cyan-dark: #00a0b8;
+      --cyan-light: #4dd0e1;
+      --black: #1a1a1a;
+      --dark: #2d2d2d;
+      --white: #ffffff;
+      --gray-bg: #f5f5f5;
+      --gray-light: #e0e0e0;
+      --gray: #888888;
+      --gray-text: #555555;
+      --warning: #f59e0b;
+      --success: #22c55e;
+    }
+    
+    body { 
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; 
+      background: var(--gray-bg);
+      min-height: 100vh;
+      color: var(--black);
+      line-height: 1.6;
+    }
+    
+    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    
+    .header {
+      text-align: center;
+      padding: 40px 20px 30px;
+      background: var(--black);
+      margin: -20px -20px 0 -20px;
+      padding: 40px 40px 30px;
+    }
+    .header h1 { 
+      font-size: 36px; 
+      font-weight: 900; 
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+      color: var(--white);
+    }
+    .header p { 
+      color: var(--gray);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .header-help {
+      margin-top: 15px;
+    }
+    .header-help a {
+      color: var(--cyan);
+      font-size: 12px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .header-help a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .header-help svg {
+      width: 14px;
+      height: 14px;
+    }
+    .quote-info {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+    }
+    .quote-info-name {
+      color: var(--cyan);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .quote-info-meta {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .quote-info-dates {
+      color: var(--gray);
+      font-size: 12px;
+    }
+    .version-selector {
+      position: relative;
+      display: inline-block;
+    }
+    .version-badge {
+      background: rgba(0, 160, 184, 0.2);
+      color: var(--cyan);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+    .version-badge:hover {
+      background: rgba(0, 160, 184, 0.4);
+    }
+    .version-badge svg {
+      width: 12px;
+      height: 12px;
+    }
+    .version-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 5px;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      min-width: 200px;
+      z-index: 100;
+      display: none;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+    .version-dropdown.visible {
+      display: block;
+    }
+    .version-item {
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+      color: var(--black);
+      font-size: 13px;
+    }
+    .version-item:last-child {
+      border-bottom: none;
+    }
+    .version-item:hover {
+      background: #f5f5f5;
+    }
+    .version-item.current {
+      background: #e6f9fc;
+      font-weight: 600;
+    }
+    .version-item-num {
+      font-weight: 600;
+      color: var(--cyan);
+    }
+    .version-item-date {
+      font-size: 11px;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+    
+    /* Save quote button (in header) */
+    .btn-save-quote {
+      background: var(--cyan);
+      color: var(--black);
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-save-quote:hover {
+      background: var(--black);
+      color: var(--white);
+    }
+    .btn-save-quote svg {
+      width: 14px;
+      height: 14px;
+    }
+    .start-over-link {
+      color: var(--gray);
+      font-size: 13px;
+      text-decoration: none;
+      cursor: pointer;
+      padding: 14px 0;
+    }
+    .start-over-link:hover {
+      color: var(--black);
+      text-decoration: underline;
+    }
+    
+    /* Share Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s;
+    }
+    .modal-overlay.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+    .modal h3 {
+      color: var(--black);
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+    .modal p {
+      color: var(--gray);
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .modal-url {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 12px;
+      word-break: break-all;
+      color: var(--black);
+      margin-bottom: 15px;
+      text-align: left;
+      max-height: 80px;
+      overflow-y: auto;
+    }
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .modal-buttons .btn {
+      min-width: 120px;
+    }
+    .modal-note {
+      margin-top: 15px;
+      font-size: 12px;
+      color: var(--gray);
+    }
+    .modal-form {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .modal-toggle-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .modal-toggle {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #ddd;
+      background: #f5f5f5;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--black);
+    }
+    .modal-toggle:hover {
+      border-color: var(--cyan);
+    }
+    .modal-toggle.selected {
+      border-color: var(--cyan);
+      background: #e6f9fc;
+    }
+    .modal-field {
+      margin-bottom: 15px;
+    }
+    .modal-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 6px;
+    }
+    .modal-field input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .modal-field input:focus {
+      outline: none;
+      border-color: var(--cyan);
+    }
+    
+    /* Edit mode banner */
+    .edit-banner {
+      background: var(--cyan);
+      color: var(--black);
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .edit-banner span {
+      font-weight: 500;
+    }
+    .edit-banner .btn {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+    
+    .progress-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 24px 0;
+      background: var(--black);
+      margin: 0 -20px 30px -20px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .progress-step {
+      width: 50px;
+      height: 5px;
+      background: var(--dark);
+      border-radius: 3px;
+      transition: all 0.3s;
+    }
+    .progress-step.active { background: var(--cyan); }
+    .progress-step.completed { background: var(--cyan); opacity: 0.5; }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .step-header {
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .step-header-left {
+      flex: 1;
+    }
+    .step-number {
+      display: inline-block;
+      background: var(--cyan);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 32px;
+      font-size: 14px;
+      font-weight: 700;
+      margin-right: 14px;
+    }
+    .step-title {
+      display: inline;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--black);
+    }
+    .step-subtitle {
+      color: var(--gray-text);
+      font-size: 14px;
+      margin-top: 8px;
+      margin-left: 46px;
+    }
+    
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray);
+      margin-bottom: 12px;
+    }
+    
+    .divider {
+      height: 1px;
+      background: var(--gray-light);
+      margin: 28px 0;
+    }
+    
+    .options-grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .option-card {
+      border: 2px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .option-card:hover { 
+      border-color: var(--cyan-light);
+      background: #f8fdfe;
+    }
+    .option-card.selected { 
+      border-color: var(--cyan);
+      background: #e6f9fc;
+    }
+    .option-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .option-name {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--black);
+    }
+    .option-price {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--cyan-dark);
+    }
+    .option-desc {
+      font-size: 13px;
+      color: var(--gray-text);
+      line-height: 1.5;
+    }
+    .option-tag {
+      display: inline-block;
+      background: var(--cyan);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 10px;
+    }
+    .option-tag.warning {
+      background: var(--warning);
+    }
+    
+    /* Package feature lists */
+    .package-includes {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--cyan-dark);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+    .package-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 10px 0;
+    }
+    .package-features li {
+      font-size: 13px;
+      color: var(--gray-text);
+      padding: 3px 0 3px 20px;
+      position: relative;
+      line-height: 1.4;
+    }
+    .package-features li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+    
+    .info-box {
+      background: #f0f9fa;
+      border: 1px solid #d0eef2;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 13px;
+      color: var(--gray-text);
+      margin-bottom: 20px;
+    }
+    .info-box strong {
+      color: var(--black);
+    }
+    
+    /* Checkbox grid for platforms */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      border: 2px solid var(--gray-light);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .checkbox-item:hover {
+      border-color: var(--cyan-light);
+      background: #f8fdfe;
+    }
+    .checkbox-item.selected {
+      border-color: var(--cyan);
+      background: #e6f9fc;
+    }
+    .checkbox-item.extra {
+      border-color: var(--warning);
+      background: #fef9e6;
+    }
+    .checkbox-item input {
+      margin-right: 10px;
+      accent-color: var(--cyan);
+      pointer-events: none;
+    }
+    .checkbox-item .platform-label {
+      flex: 1;
+    }
+    .checkbox-item .premium-badge {
+      margin-left: auto;
+      background: var(--warning);
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+    
+    /* Platform counter */
+    .platform-counter {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: #f0f9fa;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .platform-counter.over-limit {
+      background: #fef3c7;
+      border: 1px solid var(--warning);
+    }
+    .counter-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-text);
+    }
+    .counter-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--cyan-dark);
+    }
+    .counter-value.warning {
+      color: var(--warning);
+    }
+    .counter-extra {
+      font-size: 12px;
+      color: var(--warning);
+      font-weight: 600;
+      margin-left: auto;
+    }
+    
+    /* Quantity controls */
+    .quantity-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .quantity-row:last-child {
+      border-bottom: none;
+    }
+    .quantity-label {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--black);
+    }
+    .quantity-desc {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .qty-btn {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--gray-light);
+      background: white;
+      border-radius: 6px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--black);
+    }
+    .qty-btn:hover {
+      border-color: var(--cyan);
+      background: #f0f9fa;
+    }
+    .qty-value {
+      font-size: 16px;
+      font-weight: 700;
+      min-width: 30px;
+      text-align: center;
+    }
+    
+    /* Toggle switch */
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .toggle-row:last-child {
+      border-bottom: none;
+    }
+    .toggle-info {
+      flex: 1;
+    }
+    .toggle-label {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--black);
+    }
+    .toggle-desc {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+    .toggle-price {
+      font-size: 13px;
+      color: var(--cyan-dark);
+      font-weight: 600;
+      margin-right: 16px;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 28px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--gray-light);
+      border-radius: 28px;
+      transition: 0.3s;
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.3s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--cyan);
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+    }
+    
+    /* Navigation buttons */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--gray-light);
+      gap: 15px;
+    }
+    .nav-left {
+      flex: 1;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .btn {
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .btn-secondary {
+      background: white;
+      border: 2px solid var(--gray-light);
+      color: var(--gray-text);
+    }
+    .btn-secondary:hover {
+      border-color: var(--gray);
+      background: var(--gray-bg);
+    }
+    .btn-primary {
+      background: var(--cyan);
+      border: 2px solid var(--cyan);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--cyan-dark);
+      border-color: var(--cyan-dark);
+    }
+    
+    /* Summary page */
+    .summary-section {
+      margin-bottom: 24px;
+    }
+    .summary-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--gray);
+      margin-bottom: 12px;
+    }
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--gray-light);
+      font-size: 14px;
+    }
+    .summary-item:last-child {
+      border-bottom: none;
+    }
+    .summary-item-name {
+      color: var(--black);
+      font-weight: 500;
+    }
+    .summary-item-price {
+      color: var(--cyan-dark);
+      font-weight: 600;
+    }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 0;
+      margin-top: 8px;
+      border-top: 2px solid var(--black);
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .summary-total-price {
+      color: var(--cyan-dark);
+    }
+    .summary-subtotal {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      font-size: 14px;
+      color: var(--gray-text);
+    }
+    
+    .platforms-list {
+      font-size: 14px;
+      color: var(--black);
+      line-height: 1.6;
+    }
+    
+    /* Support tier cards */
+    .support-grid {
+      display: grid;
+      gap: 12px;
+    }
+    .support-card {
+      border: 2px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .support-card:hover {
+      border-color: var(--cyan-light);
+      background: #f8fdfe;
+    }
+    .support-card.selected {
+      border-color: var(--cyan);
+      background: #e6f9fc;
+    }
+    
+    /* Copy button */
+    .btn-copy {
+      width: 100%;
+      padding: 16px;
+      background: var(--black);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 20px;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover {
+      background: var(--dark);
+    }
+    
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--black);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    
+    /* Notes section */
+    .notes-section {
+      margin-top: 24px;
+      padding: 18px;
+      background: var(--gray-bg);
+      border-radius: 8px;
+    }
+    .notes-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--gray);
+      margin-bottom: 10px;
+    }
+    .notes-list {
+      font-size: 12px;
+      color: var(--gray-text);
+      line-height: 1.8;
+    }
+    .notes-list li {
+      margin-left: 16px;
+    }
+    
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Dashboard Quoter</h1>
+      <p>Growth Mad Consulting</p>
+      <div class="header-help">
+        <a href="https://dashboardquoter.growthmad.com/dashboard-glossary.html" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          What do these features mean?
+        </a>
+      </div>
+      <div class="quote-info" id="quote-info" style="display: none;">
+        <div class="quote-info-name" id="quote-info-name"></div>
+        <div class="quote-info-meta">
+          <div class="quote-info-dates" id="quote-info-dates"></div>
+          <div class="version-selector" id="version-selector" style="display: none;">
+            <div class="version-badge" onclick="toggleVersionDropdown()">
+              <span id="version-badge-text">v1</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+            <div class="version-dropdown" id="version-dropdown"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="progress-bar">
+      <div class="progress-step active" data-step="1"></div>
+      <div class="progress-step" data-step="2"></div>
+      <div class="progress-step" data-step="3"></div>
+      <div class="progress-step" data-step="4"></div>
+      <div class="progress-step" data-step="5"></div>
+    </div>
+    
+    <div class="card">
+      <!-- Step 1: Discovery & Package -->
+      <div class="step" id="step-1">
+        <div class="step-header">
+          <div class="step-header-left">
+            <span class="step-number">1</span>
+            <h2 class="step-title">Discovery & Package</h2>
+            <p class="step-subtitle">Select discovery phase and base package</p>
+          </div>
+          <button class="btn-save-quote" onclick="saveQuote()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="save-btn-text">Save Quote</span>
+          </button>
+        </div>
+        
+        <div class="section-label">Discovery Phase</div>
+        <div class="options-grid">
+          <div class="option-card" data-discovery="none" onclick="selectDiscovery('none')">
+            <div class="option-header">
+              <span class="option-name">No Discovery</span>
+              <span class="option-price">$0</span>
+            </div>
+            <p class="option-desc">Skip discovery phase. Best for straightforward, well-defined projects.</p>
+          </div>
+          <div class="option-card" data-discovery="standard" onclick="selectDiscovery('standard')">
+            <div class="option-header">
+              <span class="option-name">Discovery</span>
+              <span class="option-price">$750 – $1,000</span>
+            </div>
+            <p class="option-desc">Requirements document, data source audit, technical feasibility assessment, fixed-price proposal.</p>
+            <span class="option-tag">Fee credited if project proceeds within 30 days</span>
+          </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="section-label">Base Package</div>
+        <div class="options-grid">
+          <div class="option-card" data-package="foundation" onclick="selectPackage('foundation')">
+            <div class="option-header">
+              <span class="option-name">Foundation</span>
+              <span class="option-price">$2,000 – $3,000</span>
+            </div>
+            <ul class="package-features">
+              <li>Up to 3 platforms included</li>
+              <li>Up to 5 dashboard pages</li>
+              <li>Direct Looker Studio connectors</li>
+              <li>Standard KPIs with date controls</li>
+              <li>Basic filtering &amp; segmentation</li>
+            </ul>
+            <span class="option-tag">Data flows direct to Looker Studio</span>
+          </div>
+          
+          <div class="option-card" data-package="growth" onclick="selectPackage('growth')">
+            <div class="option-header">
+              <span class="option-name">Growth</span>
+              <span class="option-price">$4,000 – $6,000</span>
+            </div>
+            <p class="package-includes">Everything in Foundation, plus:</p>
+            <ul class="package-features">
+              <li>Up to 5 platforms included</li>
+              <li>Up to 8 dashboard pages</li>
+              <li>Google Sheets data layer included</li>
+              <li>Custom KPIs and date controls</li>
+              <li>Advanced filtering and segmentation</li>
+              <li>30-minute walkthrough session</li>
+            </ul>
+            <span class="option-tag">Data into Looker Studio through Google Sheets layer</span>
+          </div>
+          
+          <div class="option-card" data-package="transformation" onclick="selectPackage('transformation')">
+            <div class="option-header">
+              <span class="option-name">Transformation</span>
+              <span class="option-price">$7,000 – $12,000</span>
+            </div>
+            <p class="package-includes">Everything in Growth, plus:</p>
+            <ul class="package-features">
+              <li>Up to 8 platforms included</li>
+              <li>Up to 12 dashboard pages</li>
+              <li>1 campaign classification included</li>
+              <li>1 conversion / event grouping included</li>
+              <li>1 data unification / flat table included</li>
+              <li>2-hour training session</li>
+              <li>30-day post-launch support</li>
+            </ul>
+            <span class="option-tag">Data aggregation and blending in Google Sheets</span>
+          </div>
+        </div>
+        
+        <div class="nav-buttons">
+          <div class="nav-left"></div>
+          <div class="nav-right">
+            <a class="start-over-link" onclick="startOver()">Start Over</a>
+            <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 2: Platforms -->
+      <div class="step hidden" id="step-2">
+        <div class="step-header">
+          <div class="step-header-left">
+            <span class="step-number">2</span>
+            <h2 class="step-title">Platform Selection</h2>
+            <p class="step-subtitle" id="platform-subtitle">Select your data platforms</p>
+          </div>
+          <button class="btn-save-quote" onclick="saveQuote()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="save-btn-text">Save Quote</span>
+          </button>
+        </div>
+        
+        <div class="platform-counter" id="platform-counter">
+          <span class="counter-label">Standard platforms:</span>
+          <span class="counter-value" id="platform-count">0 / 2</span>
+          <span class="counter-extra" id="platform-extra"></span>
+        </div>
+        
+        <div class="section-label">Advertising Platforms</div>
+        <div class="checkbox-grid" id="ad-platforms"></div>
+        
+        <div class="section-label">Web Analytics</div>
+        <div class="checkbox-grid" id="web-platforms"></div>
+        
+        <div class="section-label">Social Media</div>
+        <div class="checkbox-grid" id="social-platforms"></div>
+        
+        <div class="section-label">Email & Marketing</div>
+        <div class="checkbox-grid" id="email-platforms"></div>
+        
+        <div class="section-label">E-commerce</div>
+        <div class="checkbox-grid" id="ecom-platforms"></div>
+        
+        <div class="divider"></div>
+        
+        <div class="section-label">Premium Integrations <span style="color: var(--warning);">(+$1,350 – $2,250 each)</span></div>
+        <p class="option-desc" style="margin-bottom: 12px;">CRM and financial platforms require additional development. Always charged additionally.</p>
+        <div class="checkbox-grid" id="premium-platforms"></div>
+        
+        
+        <div class="nav-buttons">
+          <div class="nav-left">
+            <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+          </div>
+          <div class="nav-right">
+            <a class="start-over-link" onclick="startOver()">Start Over</a>
+            <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 3: Additional Data & Pages -->
+      <div class="step hidden" id="step-3">
+        <div class="step-header">
+          <div class="step-header-left">
+            <span class="step-number">3</span>
+            <h2 class="step-title">Additional Data & Pages</h2>
+            <p class="step-subtitle">Extra data sources and dashboard pages</p>
+          </div>
+          <button class="btn-save-quote" onclick="saveQuote()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="save-btn-text">Save Quote</span>
+          </button>
+        </div>
+        
+        <div class="quantity-row">
+          <div>
+            <div class="quantity-label">Extra Data Sources</div>
+            <div class="quantity-desc">Additional data from same platform (e.g., multiple GA4 properties) — $350 – $700 each</div>
+          </div>
+          <div class="quantity-controls">
+            <button class="qty-btn" onclick="adjustQty('extraSources', -1)">−</button>
+            <span class="qty-value" id="qty-extraSources">0</span>
+            <button class="qty-btn" onclick="adjustQty('extraSources', 1)">+</button>
+          </div>
+        </div>
+        
+        <div class="quantity-row">
+          <div>
+            <div class="quantity-label">Additional Pages</div>
+            <div class="quantity-desc">Beyond package included pages — $250 – $450 each</div>
+          </div>
+          <div class="quantity-controls">
+            <button class="qty-btn" onclick="adjustQty('extraPages', -1)">−</button>
+            <span class="qty-value" id="qty-extraPages">0</span>
+            <button class="qty-btn" onclick="adjustQty('extraPages', 1)">+</button>
+          </div>
+        </div>
+        
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Custom Integration</div>
+            <div class="toggle-desc">SQL database, API, or CSV/file import integration</div>
+          </div>
+          <span class="toggle-price">$1,800 – $3,150</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle-customIntegration" onchange="updateToggle('customIntegration')">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        
+        <div class="nav-buttons">
+          <div class="nav-left">
+            <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+          </div>
+          <div class="nav-right">
+            <a class="start-over-link" onclick="startOver()">Start Over</a>
+            <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 4: Data Transformations -->
+      <div class="step hidden" id="step-4">
+        <div class="step-header">
+          <div class="step-header-left">
+            <span class="step-number">4</span>
+            <h2 class="step-title">Data Transformations</h2>
+            <p class="step-subtitle">Classification, groupings, and custom metrics / parameters</p>
+          </div>
+          <button class="btn-save-quote" onclick="saveQuote()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="save-btn-text">Save Quote</span>
+          </button>
+        </div>
+        
+        <div class="info-box" id="sheets-info">
+          <strong>Data Architecture:</strong><br>
+          <span id="sheets-status"></span>
+        </div>
+        
+        <div class="toggle-row" id="sheets-toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Add Google Sheets Data Layer</div>
+            <div class="toggle-desc">Required for transformations below. Routes data through Sheets for cleaning, standardisation, and faster dashboard performance.</div>
+          </div>
+          <span class="toggle-price">+$450 – $900</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle-sheetsLayer" onchange="updateToggle('sheetsLayer')">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="section-label">Classifications & Groupings</div>
+        <div class="info-box" id="transformations-included-info" style="display: none;">
+          <strong>Transformation Package Bonus:</strong> Your package includes 1 campaign classification, 1 conversion grouping, and 1 data unification at no extra charge. Add more below if needed.
+        </div>
+        
+        <div class="quantity-row">
+          <div>
+            <div class="quantity-label">Campaign Classifications</div>
+            <div class="quantity-desc">Brand / Non-Brand, Funnel Stage, Product Category, etc. — <span id="classifications-price-text">$700 – $1,350 each</span></div>
+          </div>
+          <div class="quantity-controls">
+            <button class="qty-btn" onclick="adjustTransformQty('classifications', -1)">−</button>
+            <span class="qty-value" id="qty-classifications">0</span>
+            <button class="qty-btn" onclick="adjustTransformQty('classifications', 1)">+</button>
+          </div>
+        </div>
+        
+        <div class="quantity-row">
+          <div>
+            <div class="quantity-label">Conversion / Event Groupings</div>
+            <div class="quantity-desc">MQL / SQL definitions, Lead types, Custom goals — <span id="groupings-price-text">$700 – $1,350 each</span></div>
+          </div>
+          <div class="quantity-controls">
+            <button class="qty-btn" onclick="adjustTransformQty('conversionGroupings', -1)">−</button>
+            <span class="qty-value" id="qty-conversionGroupings">0</span>
+            <button class="qty-btn" onclick="adjustTransformQty('conversionGroupings', 1)">+</button>
+          </div>
+        </div>
+        
+        <div class="quantity-row">
+          <div>
+            <div class="quantity-label">Data Unification / Flat Table Build</div>
+            <div class="quantity-desc">Combine multiple platforms into pre-aggregated tables — <span id="unification-price-text">$700 – $1,350 each</span></div>
+          </div>
+          <div class="quantity-controls">
+            <button class="qty-btn" onclick="adjustTransformQty('dataUnification', -1)">−</button>
+            <span class="qty-value" id="qty-dataUnification">0</span>
+            <button class="qty-btn" onclick="adjustTransformQty('dataUnification', 1)">+</button>
+          </div>
+        </div>
+        
+        <div class="divider" id="custom-metrics-divider"></div>
+        
+        <div class="quantity-row" id="custom-metrics-row">
+          <div>
+            <div class="quantity-label">Custom Metrics / Parameters</div>
+            <div class="quantity-desc">Calculated fields, selectable filters, or composite metrics — $200 – $350 each</div>
+          </div>
+          <div class="quantity-controls">
+            <button class="qty-btn" onclick="adjustQty('customMetrics', -1)">−</button>
+            <span class="qty-value" id="qty-customMetrics">0</span>
+            <button class="qty-btn" onclick="adjustQty('customMetrics', 1)">+</button>
+          </div>
+        </div>
+        
+        <div class="info-box" id="custom-metrics-included" style="display: none;">
+          <strong>Custom Metrics / Parameters Included:</strong> Your selected package includes custom calculated metrics and parameters at no additional charge.
+        </div>
+        
+        <div class="nav-buttons">
+          <div class="nav-left">
+            <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+          </div>
+          <div class="nav-right">
+            <a class="start-over-link" onclick="startOver()">Start Over</a>
+            <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 5: Summary -->
+      <div class="step hidden" id="step-5">
+        <div class="step-header">
+          <div class="step-header-left">
+            <span class="step-number">5</span>
+            <h2 class="step-title">Quote Summary</h2>
+            <p class="step-subtitle">Review your project configuration</p>
+          </div>
+          <button class="btn-save-quote" onclick="saveQuote()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="save-btn-text">Save Quote</span>
+          </button>
+        </div>
+        
+        <div id="summary-content"></div>
+        
+        <div class="divider"></div>
+        
+        <div class="section-label">Optional: Ongoing Support</div>
+        <div class="support-grid">
+          <div class="support-card" data-support="none" onclick="selectSupport('none')">
+            <div class="option-header">
+              <span class="option-name">No Ongoing Support</span>
+              <span class="option-price">$0/mo</span>
+            </div>
+            <p class="option-desc">Project delivery only. Ad-hoc support billed hourly.</p>
+          </div>
+          <div class="support-card" data-support="maintenance" onclick="selectSupport('maintenance')">
+            <div class="option-header">
+              <span class="option-name">Maintenance</span>
+              <span class="option-price">$450 – $700/mo</span>
+            </div>
+            <p class="option-desc">Connector monitoring, break-fix, 2hr response SLA.</p>
+          </div>
+          <div class="support-card" data-support="active" onclick="selectSupport('active')">
+            <div class="option-header">
+              <span class="option-name">Active Support</span>
+              <span class="option-price">$1,100 – $1,800/mo</span>
+            </div>
+            <p class="option-desc">Maintenance + 4hrs monthly changes, priority response.</p>
+          </div>
+          <div class="support-card" data-support="strategic" onclick="selectSupport('strategic')">
+            <div class="option-header">
+              <span class="option-name">Strategic Partner</span>
+              <span class="option-price">$2,250 – $3,600/mo</span>
+            </div>
+            <p class="option-desc">Active + monthly strategy calls, proactive optimization.</p>
+          </div>
+        </div>
+        
+        <div class="notes-section">
+          <div class="notes-title">Important Notes</div>
+          <ul class="notes-list">
+            <li>All prices exclude GST</li>
+            <li>PowerMyAnalytics subscription required (~$50-150/mo depending on connectors)</li>
+            <li>2 rounds of revisions included; additional revisions $450/round</li>
+            <li>Typical timeline: <span id="timeline-estimate">2-4</span> weeks</li>
+            <li>Subcontractor rates shown (client-direct typically 40-60% higher)</li>
+          </ul>
+        </div>
+        
+        <button class="btn-copy" onclick="copyQuote()">📋 Copy Quote to Clipboard</button>
+        
+        <div class="nav-buttons">
+          <div class="nav-left">
+            <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+          </div>
+          <div class="nav-right">
+            <a class="start-over-link" onclick="startOver()">Start Over</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="toast" id="toast">Quote copied to clipboard!</div>
+  
+  <!-- Share Modal -->
+  <div class="modal-overlay" id="share-modal">
+    <div class="modal">
+      <div id="modal-step-1">
+        <h3 id="modal-title">Save Quote</h3>
+        <p>Name this quote for easy reference:</p>
+        
+        <div class="modal-form">
+          <div class="modal-toggle-group">
+            <button class="modal-toggle selected" data-client-type="agency" onclick="selectClientType('agency')">Agency Client</button>
+            <button class="modal-toggle" data-client-type="direct" onclick="selectClientType('direct')">Direct Client</button>
+          </div>
+          
+          <div id="agency-fields">
+            <div class="modal-field">
+              <label>Agency Name</label>
+              <input type="text" id="agency-name" placeholder="e.g., Digital Marketing Co">
+            </div>
+            <div class="modal-field">
+              <label>Client Name</label>
+              <input type="text" id="client-name-agency" placeholder="e.g., Acme Corporation">
+            </div>
+          </div>
+          
+          <div id="direct-fields" style="display: none;">
+            <div class="modal-field">
+              <label>Client Name</label>
+              <input type="text" id="client-name-direct" placeholder="e.g., Acme Corporation">
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-buttons">
+          <button class="btn btn-primary" onclick="generateShareUrl()">Generate Link</button>
+          <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        </div>
+      </div>
+      
+      <div id="modal-step-2" style="display: none;">
+        <h3>Quote Saved!</h3>
+        <p id="quote-name-display"></p>
+        <div class="modal-url" id="share-url"></div>
+        <div class="modal-buttons">
+          <button class="btn btn-primary" onclick="copyShareUrl()">Copy Link</button>
+          <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+        </div>
+        <p class="modal-note">Bookmark this link or share it with your team.</p>
+      </div>
+    </div>
+  </div>
+
+<script>
+// Platform data
+const platforms = {
+  ad: [
+    'Google Ads', 'Meta Ads', 'LinkedIn Ads', 'Microsoft Ads', 
+    'TikTok Ads', 'Pinterest Ads', 'Twitter / X Ads', 'Snapchat Ads',
+    'Amazon Ads', 'Apple Search Ads', 'Reddit Ads'
+  ],
+  web: ['Google Analytics 4', 'Google Search Console', 'Adobe Analytics'],
+  social: ['Facebook Pages', 'Instagram', 'LinkedIn Pages', 'YouTube', 'TikTok'],
+  email: ['Mailchimp', 'Klaviyo', 'HubSpot Marketing', 'ActiveCampaign', 'Braze'],
+  ecom: ['Shopify', 'WooCommerce', 'BigCommerce', 'Magento'],
+  premium: ['Salesforce', 'HubSpot CRM']
+};
+
+// Package definitions with 10% discounted prices
+const packages = {
+  foundation: { name: 'Foundation', min: 2000, max: 3000, platforms: 3, pages: 5, sheetsIncluded: false },
+  growth: { name: 'Growth', min: 4000, max: 6000, platforms: 5, pages: 8, sheetsIncluded: true },
+  transformation: { name: 'Transformation', min: 7000, max: 12000, platforms: 8, pages: 12, sheetsIncluded: true }
+};
+
+// Pricing with 10% discounts
+const pricing = {
+  discovery: { min: 750, max: 1000 },
+  extraPlatform: { min: 900, max: 1600 },
+  premiumIntegration: { min: 1350, max: 2250 },
+  extraSource: { min: 350, max: 700 },
+  extraPage: { min: 250, max: 450 },
+  customIntegration: { min: 1800, max: 3150 },
+  sheetsLayer: { min: 450, max: 900 },
+  classifications: { min: 700, max: 1350 },
+  conversionGroupings: { min: 700, max: 1350 },
+  dataUnification: { min: 700, max: 1350 },
+  customMetric: { min: 200, max: 350 },
+  support: {
+    none: { min: 0, max: 0 },
+    maintenance: { min: 450, max: 700 },
+    active: { min: 1100, max: 1800 },
+    strategic: { min: 2250, max: 3600 }
+  }
+};
+
+// State
+let currentStep = 1;
+let maxStepReached = 1;
+let loadedFromUrl = false;
+let savedQuoteName = null;
+let savedQuoteDates = { created: null, updated: null };
+let quoteVersions = []; // Array of previous versions
+let currentVersionIndex = 0; // Which version we're viewing (0 = current/latest)
+let state = {
+  discovery: null,
+  package: null,
+  platforms: [],
+  premiumPlatforms: [],
+  extraSources: 0,
+  extraPages: 0,
+  customIntegration: false,
+  sheetsLayer: false,
+  classifications: 0,
+  conversionGroupings: 0,
+  dataUnification: 0,
+  customMetrics: 0,
+  support: 'none'
+};
+
+// Initialize
+function init() {
+  renderPlatforms();
+  
+  // Check for saved quote in URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const savedQuote = urlParams.get('q');
+  
+  if (savedQuote) {
+    try {
+      const decoded = JSON.parse(atob(savedQuote));
+      state = decoded.state;
+      maxStepReached = decoded.maxStep || 1;
+      savedQuoteName = decoded.name || null;
+      savedQuoteDates = decoded.dates || { created: null, updated: null };
+      quoteVersions = decoded.versions || [];
+      currentVersionIndex = 0; // Always start at current version
+      loadedFromUrl = true;
+      
+      // Restore UI state
+      restoreUIState();
+      
+      // Update header with quote info
+      updateHeaderQuoteInfo();
+      
+      // Go to appropriate step
+      if (maxStepReached >= 5) {
+        currentStep = 5;
+        renderSummary();
+      } else {
+        currentStep = maxStepReached;
+      }
+    } catch (e) {
+      console.error('Failed to load quote from URL:', e);
+    }
+  }
+  
+  updateUI();
+}
+
+function renderPlatforms() {
+  const containers = {
+    ad: document.getElementById('ad-platforms'),
+    web: document.getElementById('web-platforms'),
+    social: document.getElementById('social-platforms'),
+    email: document.getElementById('email-platforms'),
+    ecom: document.getElementById('ecom-platforms'),
+    premium: document.getElementById('premium-platforms')
+  };
+  
+  Object.entries(platforms).forEach(([category, items]) => {
+    const container = containers[category];
+    const isPremium = category === 'premium';
+    
+    items.forEach(platform => {
+      const div = document.createElement('div');
+      div.className = 'checkbox-item';
+      div.innerHTML = `
+        <input type="checkbox" id="platform-${platform.replace(/\s+/g, '-')}">
+        <span class="platform-label">${platform}</span>
+        ${isPremium ? '<span class="premium-badge">PREMIUM</span>' : ''}
+      `;
+      div.onclick = () => {
+        const checkbox = div.querySelector('input');
+        checkbox.checked = !checkbox.checked;
+        togglePlatform(platform, isPremium);
+      };
+      container.appendChild(div);
+    });
+  });
+}
+
+function selectDiscovery(type) {
+  state.discovery = type;
+  document.querySelectorAll('[data-discovery]').forEach(el => {
+    el.classList.toggle('selected', el.dataset.discovery === type);
+  });
+}
+
+function selectPackage(pkg) {
+  state.package = pkg;
+  document.querySelectorAll('[data-package]').forEach(el => {
+    el.classList.toggle('selected', el.dataset.package === pkg);
+  });
+  updateSheetsUI();
+  updatePlatformCounter();
+}
+
+function togglePlatform(platform, isPremium) {
+  const arr = isPremium ? state.premiumPlatforms : state.platforms;
+  const index = arr.indexOf(platform);
+  
+  if (index === -1) {
+    arr.push(platform);
+  } else {
+    arr.splice(index, 1);
+  }
+  
+  // Update checkbox item styling
+  const checkbox = document.getElementById(`platform-${platform.replace(/\s+/g, '-')}`);
+  const item = checkbox.closest('.checkbox-item');
+  item.classList.toggle('selected', arr.includes(platform));
+  
+  updatePlatformCounter();
+}
+
+function updatePlatformCounter() {
+  if (!state.package) return;
+  
+  const pkg = packages[state.package];
+  const standardCount = state.platforms.length;
+  const included = pkg.platforms;
+  const extra = Math.max(0, standardCount - included);
+  
+  const counterEl = document.getElementById('platform-counter');
+  const countEl = document.getElementById('platform-count');
+  const extraEl = document.getElementById('platform-extra');
+  
+  countEl.textContent = `${standardCount} / ${included}`;
+  
+  if (extra > 0) {
+    counterEl.classList.add('over-limit');
+    countEl.classList.add('warning');
+    extraEl.textContent = `+${extra} extra @ $900–$1,600 each`;
+  } else {
+    counterEl.classList.remove('over-limit');
+    countEl.classList.remove('warning');
+    extraEl.textContent = '';
+  }
+  
+  // Update visual styling on platform checkboxes
+  document.querySelectorAll('.checkbox-item').forEach(item => {
+    const checkbox = item.querySelector('input');
+    const platform = checkbox.id.replace('platform-', '').replace(/-/g, ' ');
+    
+    // Skip premium platforms
+    if (item.querySelector('.premium-badge')) return;
+    
+    const platformIndex = state.platforms.indexOf(platform);
+    if (platformIndex >= included && checkbox.checked) {
+      item.classList.add('extra');
+    } else {
+      item.classList.remove('extra');
+    }
+  });
+}
+
+function updateSheetsUI() {
+  if (!state.package) return;
+  
+  const pkg = packages[state.package];
+  const sheetsInfo = document.getElementById('sheets-info');
+  const sheetsToggleRow = document.getElementById('sheets-toggle-row');
+  const sheetsToggle = document.getElementById('toggle-sheetsLayer');
+  
+  // Custom metrics visibility (included in Growth & Transformation)
+  const customMetricsRow = document.getElementById('custom-metrics-row');
+  const customMetricsDivider = document.getElementById('custom-metrics-divider');
+  const customMetricsIncluded = document.getElementById('custom-metrics-included');
+  
+  // Transformations included info (only for Transformation package)
+  const transformationsInfo = document.getElementById('transformations-included-info');
+  
+  if (state.package === 'foundation') {
+    // Foundation: show custom metrics as add-on
+    customMetricsRow.style.display = 'flex';
+    customMetricsDivider.style.display = 'block';
+    customMetricsIncluded.style.display = 'none';
+    transformationsInfo.style.display = 'none';
+    
+    // Reset transformation quantities to 0 for Foundation
+    state.classifications = 0;
+    state.conversionGroupings = 0;
+    state.dataUnification = 0;
+    document.getElementById('qty-classifications').textContent = '0';
+    document.getElementById('qty-conversionGroupings').textContent = '0';
+    document.getElementById('qty-dataUnification').textContent = '0';
+    
+  } else if (state.package === 'growth') {
+    // Growth: custom metrics included, transformations are add-ons starting at 0
+    customMetricsRow.style.display = 'none';
+    customMetricsDivider.style.display = 'none';
+    customMetricsIncluded.style.display = 'block';
+    transformationsInfo.style.display = 'none';
+    state.customMetrics = 0;
+    document.getElementById('qty-customMetrics').textContent = '0';
+    
+    // Reset transformation quantities to 0 for Growth
+    state.classifications = 0;
+    state.conversionGroupings = 0;
+    state.dataUnification = 0;
+    document.getElementById('qty-classifications').textContent = '0';
+    document.getElementById('qty-conversionGroupings').textContent = '0';
+    document.getElementById('qty-dataUnification').textContent = '0';
+    
+  } else {
+    // Transformation: custom metrics included, 1 of each transformation included
+    customMetricsRow.style.display = 'none';
+    customMetricsDivider.style.display = 'none';
+    customMetricsIncluded.style.display = 'block';
+    transformationsInfo.style.display = 'block';
+    state.customMetrics = 0;
+    document.getElementById('qty-customMetrics').textContent = '0';
+    
+    // Set transformation quantities to minimum 1 (included)
+    state.classifications = Math.max(1, state.classifications);
+    state.conversionGroupings = Math.max(1, state.conversionGroupings);
+    state.dataUnification = Math.max(1, state.dataUnification);
+    document.getElementById('qty-classifications').textContent = state.classifications;
+    document.getElementById('qty-conversionGroupings').textContent = state.conversionGroupings;
+    document.getElementById('qty-dataUnification').textContent = state.dataUnification;
+  }
+  
+  if (pkg.sheetsIncluded) {
+    // Growth and Transformation have Sheets included
+    sheetsInfo.innerHTML = `<strong>Data Architecture:</strong> Google Sheets data layer is <strong>included</strong> with ${pkg.name} package. Data routes through Sheets for cleaning, standardisation, and faster dashboard performance.`;
+    sheetsToggleRow.classList.add('hidden');
+    state.sheetsLayer = true; // Auto-enable for these packages
+    sheetsToggle.checked = true;
+  } else {
+    // Foundation uses direct connectors by default
+    sheetsInfo.innerHTML = `<strong>Data Architecture:</strong> Foundation uses direct Looker Studio connectors by default. Add Google Sheets data layer below if you need transformations or better performance.`;
+    sheetsToggleRow.classList.remove('hidden');
+  }
+}
+
+function adjustQty(field, delta) {
+  state[field] = Math.max(0, state[field] + delta);
+  document.getElementById(`qty-${field}`).textContent = state[field];
+}
+
+function adjustTransformQty(field, delta) {
+  // For Transformation package, minimum is 1 (included)
+  const minVal = state.package === 'transformation' ? 1 : 0;
+  state[field] = Math.max(minVal, state[field] + delta);
+  document.getElementById(`qty-${field}`).textContent = state[field];
+  
+  // Auto-enable sheets layer if adding transformations on Foundation
+  if (state[field] > 0 && !state.sheetsLayer && state.package === 'foundation') {
+    const sheetsToggle = document.getElementById('toggle-sheetsLayer');
+    sheetsToggle.checked = true;
+    state.sheetsLayer = true;
+  }
+}
+
+function updateToggle(field) {
+  const checkbox = document.getElementById(`toggle-${field}`);
+  state[field] = checkbox.checked;
+}
+
+function selectSupport(tier) {
+  state.support = tier;
+  document.querySelectorAll('[data-support]').forEach(el => {
+    el.classList.toggle('selected', el.dataset.support === tier);
+  });
+}
+
+function nextStep() {
+  if (currentStep === 1 && (!state.discovery || !state.package)) {
+    alert('Please select both a discovery option and a package.');
+    return;
+  }
+  
+  if (currentStep < 5) {
+    currentStep++;
+    maxStepReached = Math.max(maxStepReached, currentStep);
+    updateUI();
+    
+    if (currentStep === 5) {
+      renderSummary();
+    }
+  }
+}
+
+function prevStep() {
+  if (currentStep > 1) {
+    currentStep--;
+    updateUI();
+  }
+}
+
+function updateUI() {
+  // Update steps visibility
+  document.querySelectorAll('.step').forEach((step, i) => {
+    step.classList.toggle('hidden', i + 1 !== currentStep);
+  });
+  
+  // Update progress bar
+  document.querySelectorAll('.progress-step').forEach((step, i) => {
+    step.classList.remove('active', 'completed');
+    if (i + 1 === currentStep) step.classList.add('active');
+    if (i + 1 < currentStep) step.classList.add('completed');
+  });
+  
+  // Update platform subtitle
+  if (state.package) {
+    const pkg = packages[state.package];
+    document.getElementById('platform-subtitle').textContent = 
+      `${pkg.name} includes ${pkg.platforms} platforms. Select your data sources.`;
+  }
+  
+  // Update timeline estimate
+  const timeline = state.package === 'transformation' ? '4-8' : '2-4';
+  const timelineEl = document.getElementById('timeline-estimate');
+  if (timelineEl) timelineEl.textContent = timeline;
+  
+  // Update save button text based on whether quote has been saved before
+  const saveButtonText = savedQuoteDates.created ? 'Re-save Quote' : 'Save Quote';
+  document.querySelectorAll('.save-btn-text').forEach(el => {
+    el.textContent = saveButtonText;
+  });
+  
+  updateSheetsUI();
+}
+
+function calculateQuote() {
+  const pkg = packages[state.package];
+  let minTotal = pkg.min;
+  let maxTotal = pkg.max;
+  let items = [{ name: `${pkg.name} Package`, min: pkg.min, max: pkg.max }];
+  
+  // Discovery
+  let discoveryMin = 0, discoveryMax = 0;
+  if (state.discovery === 'standard') {
+    discoveryMin = pricing.discovery.min;
+    discoveryMax = pricing.discovery.max;
+    minTotal += discoveryMin;
+    maxTotal += discoveryMax;
+    items.push({ name: 'Discovery Phase', min: discoveryMin, max: discoveryMax });
+  }
+  
+  // Standard platforms beyond included
+  const totalStandardPlatforms = state.platforms.length;
+  const extraStandard = Math.max(0, totalStandardPlatforms - pkg.platforms);
+  if (extraStandard > 0) {
+    const addMin = extraStandard * pricing.extraPlatform.min;
+    const addMax = extraStandard * pricing.extraPlatform.max;
+    minTotal += addMin;
+    maxTotal += addMax;
+    const extraPlatformNames = state.platforms.slice(pkg.platforms);
+    items.push({ name: `Additional standard platforms: ${extraPlatformNames.join(', ')}`, min: addMin, max: addMax });
+  }
+  
+  // Premium integrations
+  if (state.premiumPlatforms.length > 0) {
+    const premMin = state.premiumPlatforms.length * pricing.premiumIntegration.min;
+    const premMax = state.premiumPlatforms.length * pricing.premiumIntegration.max;
+    minTotal += premMin;
+    maxTotal += premMax;
+    items.push({ name: `Premium integrations: ${state.premiumPlatforms.join(', ')}`, min: premMin, max: premMax });
+  }
+  
+  // Extra data sources
+  if (state.extraSources > 0) {
+    const srcMin = state.extraSources * pricing.extraSource.min;
+    const srcMax = state.extraSources * pricing.extraSource.max;
+    minTotal += srcMin;
+    maxTotal += srcMax;
+    items.push({ name: `Additional data sources (×${state.extraSources})`, min: srcMin, max: srcMax });
+  }
+  
+  // Extra pages
+  if (state.extraPages > 0) {
+    const pgMin = state.extraPages * pricing.extraPage.min;
+    const pgMax = state.extraPages * pricing.extraPage.max;
+    minTotal += pgMin;
+    maxTotal += pgMax;
+    items.push({ name: `Additional pages (×${state.extraPages})`, min: pgMin, max: pgMax });
+  }
+  
+  // Custom data source integration
+  if (state.customIntegration) {
+    minTotal += pricing.customIntegration.min;
+    maxTotal += pricing.customIntegration.max;
+    items.push({ name: 'Custom data source integration (SQL / API / CSV)', min: pricing.customIntegration.min, max: pricing.customIntegration.max });
+  }
+  
+  // Sheets layer (only charge if Foundation and enabled)
+  if (state.sheetsLayer && !pkg.sheetsIncluded) {
+    minTotal += pricing.sheetsLayer.min;
+    maxTotal += pricing.sheetsLayer.max;
+    items.push({ name: 'Google Sheets data layer', min: pricing.sheetsLayer.min, max: pricing.sheetsLayer.max });
+  }
+  
+  // Classifications (1 included in Transformation, add-on for others)
+  const includedClassifications = state.package === 'transformation' ? 1 : 0;
+  const extraClassifications = Math.max(0, state.classifications - includedClassifications);
+  if (extraClassifications > 0) {
+    const clsMin = extraClassifications * pricing.classifications.min;
+    const clsMax = extraClassifications * pricing.classifications.max;
+    minTotal += clsMin;
+    maxTotal += clsMax;
+    const clsName = state.package === 'transformation' 
+      ? `Additional campaign classifications (×${extraClassifications})`
+      : `Campaign classifications (×${state.classifications})`;
+    items.push({ name: clsName, min: clsMin, max: clsMax });
+  }
+  
+  // Conversion groupings (1 included in Transformation, add-on for others)
+  const includedGroupings = state.package === 'transformation' ? 1 : 0;
+  const extraGroupings = Math.max(0, state.conversionGroupings - includedGroupings);
+  if (extraGroupings > 0) {
+    const grpMin = extraGroupings * pricing.conversionGroupings.min;
+    const grpMax = extraGroupings * pricing.conversionGroupings.max;
+    minTotal += grpMin;
+    maxTotal += grpMax;
+    const grpName = state.package === 'transformation'
+      ? `Additional conversion groupings (×${extraGroupings})`
+      : `Conversion / event groupings (×${state.conversionGroupings})`;
+    items.push({ name: grpName, min: grpMin, max: grpMax });
+  }
+  
+  // Data unification (1 included in Transformation, add-on for others)
+  const includedUnification = state.package === 'transformation' ? 1 : 0;
+  const extraUnification = Math.max(0, state.dataUnification - includedUnification);
+  if (extraUnification > 0) {
+    const uniMin = extraUnification * pricing.dataUnification.min;
+    const uniMax = extraUnification * pricing.dataUnification.max;
+    minTotal += uniMin;
+    maxTotal += uniMax;
+    const uniName = state.package === 'transformation'
+      ? `Additional data unification tables (×${extraUnification})`
+      : `Data unification / flat table (×${state.dataUnification})`;
+    items.push({ name: uniName, min: uniMin, max: uniMax });
+  }
+  
+  // Custom metrics (only for Foundation - included in Growth/Transformation)
+  if (state.customMetrics > 0 && state.package === 'foundation') {
+    const metMin = state.customMetrics * pricing.customMetric.min;
+    const metMax = state.customMetrics * pricing.customMetric.max;
+    minTotal += metMin;
+    maxTotal += metMax;
+    items.push({ name: `Custom metrics / parameters (×${state.customMetrics})`, min: metMin, max: metMax });
+  }
+  
+  return { 
+    items, 
+    minTotal, 
+    maxTotal,
+    discovery: { min: discoveryMin, max: discoveryMax },
+    support: pricing.support[state.support]
+  };
+}
+
+function renderSummary() {
+  const quote = calculateQuote();
+  const platformsList = [...state.platforms, ...state.premiumPlatforms];
+  
+  // Quote name header if loaded from URL
+  let quoteHeader = '';
+  if (loadedFromUrl && savedQuoteName) {
+    const nameDisplay = savedQuoteName.type === 'agency'
+      ? `${savedQuoteName.client} <span style="color: var(--gray); font-weight: 400;">(via ${savedQuoteName.agency})</span>`
+      : savedQuoteName.client;
+    quoteHeader = `
+    <div class="summary-section" style="text-align: center; padding-bottom: 15px; border-bottom: 1px solid #eee; margin-bottom: 15px;">
+      <div style="font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Quote for</div>
+      <div style="font-size: 22px; font-weight: 700; color: var(--black);">${nameDisplay}</div>
+    </div>
+    `;
+  }
+  
+  // Edit banner for saved quotes
+  let editBanner = '';
+  if (loadedFromUrl) {
+    editBanner = `
+    <div class="edit-banner">
+      <span>📋 Viewing saved quote</span>
+      <button class="btn btn-secondary" onclick="editQuote()">Edit Quote</button>
+    </div>
+    `;
+  }
+  
+  // Build included features list for Transformation
+  let includedFeatures = '';
+  if (state.package === 'transformation') {
+    includedFeatures = `
+    <div class="summary-section">
+      <div class="summary-title">Included with Transformation Package</div>
+      <p class="platforms-list" style="color: #00a0b8;">✓ Google Sheets data layer, ✓ Custom metrics, ✓ 1 campaign classification, ✓ 1 conversion grouping, ✓ 1 data unification, ✓ 2hr training, ✓ 30-day support</p>
+    </div>
+    `;
+  } else if (state.package === 'growth') {
+    includedFeatures = `
+    <div class="summary-section">
+      <div class="summary-title">Included with Growth Package</div>
+      <p class="platforms-list" style="color: #00a0b8;">✓ Google Sheets data layer, ✓ Custom KPIs, ✓ Advanced filtering, ✓ 30-min walkthrough</p>
+    </div>
+    `;
+  }
+  
+  let html = `
+    ${editBanner}
+    ${quoteHeader}
+    <div class="summary-section">
+      <div class="summary-title">Platforms Selected (${platformsList.length})</div>
+      <p class="platforms-list">${platformsList.join(', ') || 'None selected'}</p>
+    </div>
+    ${includedFeatures}
+    <div class="summary-section">
+      <div class="summary-title">Project Investment Breakdown</div>
+      ${quote.items.map(item => `
+        <div class="summary-item">
+          <span class="summary-item-name">${item.name}</span>
+          <span class="summary-item-price">$${item.min.toLocaleString()} – $${item.max.toLocaleString()}</span>
+        </div>
+      `).join('')}
+      <div class="summary-total">
+        <span>Project Total (ex GST)</span>
+        <span class="summary-total-price">$${quote.minTotal.toLocaleString()} – $${quote.maxTotal.toLocaleString()}</span>
+      </div>
+      ${quote.discovery.min > 0 ? `
+      <div class="summary-subtotal">
+        <span>Excluding Discovery (if proceeding within 30 days)</span>
+        <span>$${(quote.minTotal - quote.discovery.min).toLocaleString()} – $${(quote.maxTotal - quote.discovery.max).toLocaleString()}</span>
+      </div>
+      ` : ''}
+    </div>
+  `;
+  
+  if (state.support !== 'none') {
+    html += `
+      <div class="summary-section">
+        <div class="summary-title">Ongoing Support</div>
+        <div class="summary-item">
+          <span class="summary-item-name">${state.support.charAt(0).toUpperCase() + state.support.slice(1)}</span>
+          <span class="summary-item-price">$${quote.support.min.toLocaleString()} – $${quote.support.max.toLocaleString()}/mo</span>
+        </div>
+      </div>
+    `;
+  }
+  
+  document.getElementById('summary-content').innerHTML = html;
+}
+
+function copyQuote() {
+  const quote = calculateQuote();
+  const pkg = packages[state.package];
+  const platformsList = [...state.platforms, ...state.premiumPlatforms];
+  
+  let text = `DASHBOARD PROJECT QUOTE\n`;
+  text += `Growth Mad Consulting\n`;
+  text += `${'='.repeat(40)}\n\n`;
+  
+  text += `Package: ${pkg.name}\n`;
+  text += `Platforms: ${platformsList.join(', ') || 'None'}\n\n`;
+  
+  // Add included features based on package
+  if (state.package === 'transformation') {
+    text += `INCLUDED WITH TRANSFORMATION:\n`;
+    text += `• Google Sheets data layer\n`;
+    text += `• Custom calculated metrics\n`;
+    text += `• 1 campaign classification\n`;
+    text += `• 1 conversion / event grouping\n`;
+    text += `• 1 data unification / flat table\n`;
+    text += `• 2-hour training session\n`;
+    text += `• 30-day post-launch support\n\n`;
+  } else if (state.package === 'growth') {
+    text += `INCLUDED WITH GROWTH:\n`;
+    text += `• Google Sheets data layer\n`;
+    text += `• Custom KPIs and date controls\n`;
+    text += `• Advanced filtering and segmentation\n`;
+    text += `• 30-minute walkthrough session\n\n`;
+  }
+  
+  text += `BREAKDOWN:\n`;
+  quote.items.forEach(item => {
+    text += `• ${item.name}: $${item.min.toLocaleString()} – $${item.max.toLocaleString()}\n`;
+  });
+  
+  text += `\nPROJECT TOTAL: $${quote.minTotal.toLocaleString()} – $${quote.maxTotal.toLocaleString()} (ex GST)\n`;
+  
+  if (quote.discovery.min > 0) {
+    text += `(Excluding discovery if proceeding within 30 days: $${(quote.minTotal - quote.discovery.min).toLocaleString()} – $${(quote.maxTotal - quote.discovery.max).toLocaleString()})\n`;
+  }
+  
+  if (state.support !== 'none') {
+    text += `\nOngoing Support: ${state.support.charAt(0).toUpperCase() + state.support.slice(1)} — $${quote.support.min.toLocaleString()} – $${quote.support.max.toLocaleString()}/mo\n`;
+  }
+  
+  text += `\nNOTES:\n`;
+  text += `• All prices exclude GST\n`;
+  text += `• PowerMyAnalytics subscription required (~$50-150/mo)\n`;
+  text += `• 2 rounds of revisions included; additional $450/round\n`;
+  text += `• Typical timeline: ${pkg.name === 'Transformation' ? '4-8' : '2-4'} weeks\n`;
+  text += `• Subcontractor rates (client-direct typically 40-60% higher)\n`;
+  if (quote.discovery.min > 0) {
+    text += `• Discovery fee credited if project proceeds within 30 days\n`;
+  }
+  
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Quote copied to clipboard!');
+  }).catch(() => {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showToast('Quote copied to clipboard!');
+  });
+}
+
+// Save/Share Quote Functions
+let clientType = 'agency';
+
+function saveQuote() {
+  // Reset modal to step 1
+  document.getElementById('modal-step-1').style.display = 'block';
+  document.getElementById('modal-step-2').style.display = 'none';
+  
+  // Update modal title based on whether this is a re-save
+  document.getElementById('modal-title').textContent = savedQuoteDates.created ? 'Re-save Quote' : 'Save Quote';
+  
+  // Pre-fill form fields if re-saving
+  if (savedQuoteName) {
+    if (savedQuoteName.type === 'agency') {
+      selectClientType('agency');
+      document.getElementById('agency-name').value = savedQuoteName.agency || '';
+      document.getElementById('client-name-agency').value = savedQuoteName.client || '';
+    } else {
+      selectClientType('direct');
+      document.getElementById('client-name-direct').value = savedQuoteName.client || '';
+    }
+  } else {
+    // Clear form fields for new quote
+    document.getElementById('agency-name').value = '';
+    document.getElementById('client-name-agency').value = '';
+    document.getElementById('client-name-direct').value = '';
+    selectClientType('agency');
+  }
+  
+  document.getElementById('share-modal').classList.add('visible');
+}
+
+function selectClientType(type) {
+  clientType = type;
+  
+  document.querySelectorAll('.modal-toggle').forEach(el => {
+    el.classList.toggle('selected', el.dataset.clientType === type);
+  });
+  
+  document.getElementById('agency-fields').style.display = type === 'agency' ? 'block' : 'none';
+  document.getElementById('direct-fields').style.display = type === 'direct' ? 'block' : 'none';
+}
+
+function generateShareUrl() {
+  let quoteName = {};
+  
+  if (clientType === 'agency') {
+    const agencyName = document.getElementById('agency-name').value.trim();
+    const clientName = document.getElementById('client-name-agency').value.trim();
+    
+    if (!agencyName || !clientName) {
+      alert('Please enter both agency name and client name.');
+      return;
+    }
+    
+    quoteName = {
+      type: 'agency',
+      agency: agencyName,
+      client: clientName
+    };
+  } else {
+    const clientName = document.getElementById('client-name-direct').value.trim();
+    
+    if (!clientName) {
+      alert('Please enter the client name.');
+      return;
+    }
+    
+    quoteName = {
+      type: 'direct',
+      client: clientName
+    };
+  }
+  
+  // Update maxStepReached to current step
+  maxStepReached = Math.max(maxStepReached, currentStep);
+  
+  // Handle dates - preserve created date if re-saving, update updated date
+  const now = new Date().toISOString();
+  const quoteDates = {
+    created: savedQuoteDates.created || now,
+    updated: now
+  };
+  
+  // If re-saving, save the previous state as a version
+  if (savedQuoteDates.created && savedQuoteDates.updated) {
+    // Get the previous state from URL (before this save)
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentSavedQuote = urlParams.get('q');
+    if (currentSavedQuote) {
+      try {
+        const previousData = JSON.parse(atob(currentSavedQuote));
+        // Add previous state to versions array
+        quoteVersions.unshift({
+          state: previousData.state,
+          maxStep: previousData.maxStep,
+          date: savedQuoteDates.updated,
+          versionNum: quoteVersions.length + 1
+        });
+        // Keep only last 10 versions
+        if (quoteVersions.length > 10) {
+          quoteVersions = quoteVersions.slice(0, 10);
+        }
+      } catch (e) {
+        console.error('Failed to save version:', e);
+      }
+    }
+  }
+  
+  const quoteData = {
+    state: state,
+    maxStep: maxStepReached,
+    name: quoteName,
+    dates: quoteDates,
+    versions: quoteVersions
+  };
+  
+  const encoded = btoa(JSON.stringify(quoteData));
+  const baseUrl = 'https://dashboardquoter.growthmad.com';
+  const url = baseUrl + '?q=' + encoded;
+  
+  // Update browser URL so the same link can be used
+  window.history.replaceState({}, '', '?q=' + encoded);
+  
+  // Update saved state
+  savedQuoteName = quoteName;
+  savedQuoteDates = quoteDates;
+  currentVersionIndex = 0;
+  loadedFromUrl = true;
+  
+  // Update save button text
+  document.querySelectorAll('.save-btn-text').forEach(el => {
+    el.textContent = 'Re-save Quote';
+  });
+  
+  // Update header with quote info
+  updateHeaderQuoteInfo();
+  
+  // Show step 2
+  document.getElementById('modal-step-1').style.display = 'none';
+  document.getElementById('modal-step-2').style.display = 'block';
+  
+  // Display quote name
+  const nameDisplay = quoteName.type === 'agency' 
+    ? `Quote for <strong>${quoteName.client}</strong> (via ${quoteName.agency})`
+    : `Quote for <strong>${quoteName.client}</strong>`;
+  document.getElementById('quote-name-display').innerHTML = nameDisplay;
+  
+  document.getElementById('share-url').textContent = url;
+}
+
+function updateHeaderQuoteInfo() {
+  const quoteInfoEl = document.getElementById('quote-info');
+  const quoteInfoNameEl = document.getElementById('quote-info-name');
+  const quoteInfoDatesEl = document.getElementById('quote-info-dates');
+  const versionSelectorEl = document.getElementById('version-selector');
+  const versionBadgeTextEl = document.getElementById('version-badge-text');
+  const versionDropdownEl = document.getElementById('version-dropdown');
+  
+  if (savedQuoteName && savedQuoteDates.created) {
+    // Build name display
+    const nameDisplay = savedQuoteName.type === 'agency'
+      ? `${savedQuoteName.agency} — ${savedQuoteName.client}`
+      : savedQuoteName.client;
+    
+    // Format dates
+    const formatDate = (isoString) => {
+      const date = new Date(isoString);
+      return date.toLocaleDateString('en-AU', { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric'
+      });
+    };
+    
+    const formatDateTime = (isoString) => {
+      const date = new Date(isoString);
+      return date.toLocaleDateString('en-AU', { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    };
+    
+    const createdDate = formatDate(savedQuoteDates.created);
+    const updatedDate = formatDate(savedQuoteDates.updated);
+    
+    let datesDisplay = `Created: ${createdDate}`;
+    if (savedQuoteDates.created !== savedQuoteDates.updated) {
+      datesDisplay += ` • Updated: ${updatedDate}`;
+    }
+    
+    quoteInfoNameEl.textContent = nameDisplay;
+    quoteInfoDatesEl.textContent = datesDisplay;
+    quoteInfoEl.style.display = 'block';
+    
+    // Show version selector if there are versions
+    const totalVersions = quoteVersions.length + 1; // +1 for current version
+    if (totalVersions > 1) {
+      const currentVersionNum = totalVersions - currentVersionIndex;
+      versionBadgeTextEl.textContent = `v${currentVersionNum} of ${totalVersions}`;
+      versionSelectorEl.style.display = 'inline-block';
+      
+      // Build version dropdown
+      let dropdownHtml = '';
+      
+      // Current version
+      dropdownHtml += `
+        <div class="version-item ${currentVersionIndex === 0 ? 'current' : ''}" onclick="loadVersion(0)">
+          <div class="version-item-num">v${totalVersions} (Current)</div>
+          <div class="version-item-date">${formatDateTime(savedQuoteDates.updated)}</div>
+        </div>
+      `;
+      
+      // Previous versions
+      quoteVersions.forEach((version, index) => {
+        const versionNum = totalVersions - (index + 1);
+        dropdownHtml += `
+          <div class="version-item ${currentVersionIndex === index + 1 ? 'current' : ''}" onclick="loadVersion(${index + 1})">
+            <div class="version-item-num">v${versionNum}</div>
+            <div class="version-item-date">${formatDateTime(version.date)}</div>
+          </div>
+        `;
+      });
+      
+      versionDropdownEl.innerHTML = dropdownHtml;
+    } else {
+      versionSelectorEl.style.display = 'none';
+    }
+  } else {
+    quoteInfoEl.style.display = 'none';
+  }
+}
+
+function toggleVersionDropdown() {
+  const dropdown = document.getElementById('version-dropdown');
+  dropdown.classList.toggle('visible');
+}
+
+function loadVersion(versionIndex) {
+  // Close dropdown
+  document.getElementById('version-dropdown').classList.remove('visible');
+  
+  if (versionIndex === 0) {
+    // Load current version - reload from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const savedQuote = urlParams.get('q');
+    if (savedQuote) {
+      try {
+        const decoded = JSON.parse(atob(savedQuote));
+        state = decoded.state;
+        maxStepReached = decoded.maxStep || 1;
+        currentVersionIndex = 0;
+        
+        // Restore UI state
+        resetUIElements();
+        restoreUIState();
+        
+        // Go to appropriate step
+        if (maxStepReached >= 5) {
+          currentStep = 5;
+          renderSummary();
+        } else {
+          currentStep = maxStepReached;
+        }
+        
+        updateUI();
+        updateHeaderQuoteInfo();
+        showToast('Loaded current version');
+      } catch (e) {
+        console.error('Failed to load version:', e);
+      }
+    }
+  } else {
+    // Load previous version
+    const version = quoteVersions[versionIndex - 1];
+    if (version) {
+      state = JSON.parse(JSON.stringify(version.state)); // Deep copy
+      maxStepReached = version.maxStep || 1;
+      currentVersionIndex = versionIndex;
+      
+      // Restore UI state
+      resetUIElements();
+      restoreUIState();
+      
+      // Go to appropriate step
+      if (maxStepReached >= 5) {
+        currentStep = 5;
+        renderSummary();
+      } else {
+        currentStep = maxStepReached;
+      }
+      
+      updateUI();
+      updateHeaderQuoteInfo();
+      showToast(`Loaded version ${quoteVersions.length + 1 - versionIndex}`);
+    }
+  }
+}
+
+function resetUIElements() {
+  // Reset all UI elements before restoring state
+  document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.extra').forEach(el => el.classList.remove('extra'));
+  document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+  document.querySelectorAll('.qty-value').forEach(el => el.textContent = '0');
+}
+
+// Close version dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  const dropdown = document.getElementById('version-dropdown');
+  const selector = document.getElementById('version-selector');
+  if (dropdown && selector && !selector.contains(e.target)) {
+    dropdown.classList.remove('visible');
+  }
+});
+
+function copyShareUrl() {
+  const url = document.getElementById('share-url').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('Link copied to clipboard!');
+  }).catch(() => {
+    const textarea = document.createElement('textarea');
+    textarea.value = url;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showToast('Link copied to clipboard!');
+  });
+}
+
+function closeModal() {
+  document.getElementById('share-modal').classList.remove('visible');
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('share-modal');
+  if (e.target === modal) {
+    closeModal();
+  }
+});
+
+function restoreUIState() {
+  // Restore discovery selection
+  if (state.discovery) {
+    document.querySelectorAll('[data-discovery]').forEach(el => {
+      el.classList.toggle('selected', el.dataset.discovery === state.discovery);
+    });
+  }
+  
+  // Restore package selection
+  if (state.package) {
+    document.querySelectorAll('[data-package]').forEach(el => {
+      el.classList.toggle('selected', el.dataset.package === state.package);
+    });
+    updatePackageUI();
+  }
+  
+  // Restore platform checkboxes
+  state.platforms.forEach(platform => {
+    const checkbox = document.getElementById(`platform-${platform.replace(/\s+/g, '-')}`);
+    if (checkbox) {
+      checkbox.checked = true;
+      checkbox.closest('.checkbox-item').classList.add('selected');
+    }
+  });
+  
+  // Restore premium platform checkboxes
+  state.premiumPlatforms.forEach(platform => {
+    const checkbox = document.getElementById(`platform-${platform.replace(/\s+/g, '-')}`);
+    if (checkbox) {
+      checkbox.checked = true;
+      checkbox.closest('.checkbox-item').classList.add('selected');
+    }
+  });
+  
+  // Restore quantities
+  document.getElementById('qty-extraSources').textContent = state.extraSources;
+  document.getElementById('qty-extraPages').textContent = state.extraPages;
+  document.getElementById('qty-classifications').textContent = state.classifications;
+  document.getElementById('qty-conversionGroupings').textContent = state.conversionGroupings;
+  document.getElementById('qty-dataUnification').textContent = state.dataUnification;
+  document.getElementById('qty-customMetrics').textContent = state.customMetrics;
+  
+  // Restore toggles
+  const customToggle = document.getElementById('toggle-customIntegration');
+  const sheetsToggle = document.getElementById('toggle-sheetsLayer');
+  if (customToggle) customToggle.checked = state.customIntegration;
+  if (sheetsToggle) sheetsToggle.checked = state.sheetsLayer;
+  
+  // Restore support selection
+  if (state.support) {
+    document.querySelectorAll('[data-support]').forEach(el => {
+      el.classList.toggle('selected', el.dataset.support === state.support);
+    });
+  }
+  
+  // Update platform counter
+  updatePlatformCount();
+}
+
+function editQuote() {
+  loadedFromUrl = false;
+  // Note: keep savedQuoteName and savedQuoteDates for re-saving
+  currentStep = 1;
+  updateUI();
+  
+  // Clear URL parameter
+  window.history.replaceState({}, '', window.location.pathname);
+}
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function startOver() {
+  state = {
+    discovery: null,
+    package: null,
+    platforms: [],
+    premiumPlatforms: [],
+    extraSources: 0,
+    extraPages: 0,
+    customIntegration: false,
+    sheetsLayer: false,
+    classifications: 0,
+    conversionGroupings: 0,
+    dataUnification: 0,
+    customMetrics: 0,
+    support: 'none'
+  };
+  
+  // Reset step tracking but keep quote identity if loaded from URL
+  maxStepReached = 1;
+  // Don't clear savedQuoteName or loadedFromUrl - the quote identity remains
+  // User must click re-save to update the saved version
+  
+  // Reset all UI elements
+  document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.extra').forEach(el => el.classList.remove('extra'));
+  document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+  document.querySelectorAll('.qty-value').forEach(el => el.textContent = '0');
+  
+  currentStep = 1;
+  updateUI();
+}
+
+init();
+</script>
+</body>
+</html>
