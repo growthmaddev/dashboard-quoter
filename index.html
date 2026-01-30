@@ -41,7 +41,6 @@
       background: var(--black);
       margin: -20px -20px 0 -20px;
       padding: 40px 40px 30px;
-      position: relative;
     }
     .header h1 { 
       font-size: 36px; 
@@ -57,26 +56,150 @@
       letter-spacing: 1px;
       text-transform: uppercase;
     }
-    .btn-save-quote {
+    .header-help {
+      margin-top: 15px;
+    }
+    .header-help a {
+      color: var(--cyan);
+      font-size: 12px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .header-help a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .header-help svg {
+      width: 14px;
+      height: 14px;
+    }
+    .quote-info {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+    }
+    .quote-info-name {
+      color: var(--cyan);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .quote-info-meta {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .quote-info-dates {
+      color: var(--gray);
+      font-size: 12px;
+    }
+    .version-selector {
+      position: relative;
+      display: inline-block;
+    }
+    .version-badge {
+      background: rgba(0, 160, 184, 0.2);
+      color: var(--cyan);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+    .version-badge:hover {
+      background: rgba(0, 160, 184, 0.4);
+    }
+    .version-badge svg {
+      width: 12px;
+      height: 12px;
+    }
+    .version-dropdown {
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 100%;
+      left: 0;
+      margin-top: 5px;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      min-width: 200px;
+      z-index: 100;
+      display: none;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+    .version-dropdown.visible {
+      display: block;
+    }
+    .version-item {
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+      color: var(--black);
+      font-size: 13px;
+    }
+    .version-item:last-child {
+      border-bottom: none;
+    }
+    .version-item:hover {
+      background: #f5f5f5;
+    }
+    .version-item.current {
+      background: #e6f9fc;
+      font-weight: 600;
+    }
+    .version-item-num {
+      font-weight: 600;
+      color: var(--cyan);
+    }
+    .version-item-date {
+      font-size: 11px;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+    
+    /* Save quote button (in header) */
+    .btn-save-quote {
       background: var(--cyan);
       color: var(--black);
       border: none;
       padding: 8px 14px;
       border-radius: 6px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
       transition: all 0.2s;
+      white-space: nowrap;
     }
     .btn-save-quote:hover {
-      background: var(--white);
-      transform: translateY(-1px);
+      background: var(--black);
+      color: var(--white);
+    }
+    .btn-save-quote svg {
+      width: 14px;
+      height: 14px;
+    }
+    .start-over-link {
+      color: var(--gray);
+      font-size: 13px;
+      text-decoration: none;
+      cursor: pointer;
+      padding: 14px 0;
+    }
+    .start-over-link:hover {
+      color: var(--black);
+      text-decoration: underline;
     }
     
     /* Share Modal */
@@ -242,6 +365,12 @@
     
     .step-header {
       margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .step-header-left {
+      flex: 1;
     }
     .step-number {
       display: inline-block;
@@ -589,9 +718,19 @@
     .nav-buttons {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-top: 28px;
       padding-top: 20px;
       border-top: 1px solid var(--gray-light);
+      gap: 15px;
+    }
+    .nav-left {
+      flex: 1;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
     .btn {
       padding: 14px 28px;
@@ -772,13 +911,31 @@
     <div class="header">
       <h1>Dashboard Quoter</h1>
       <p>Growth Mad Consulting</p>
-      <button class="btn-save-quote" onclick="saveQuote()" title="Save & Share Quote">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-        </svg>
-        Save Quote
-      </button>
+      <div class="header-help">
+        <a href="https://dashboardquoter.growthmad.com/dashboard-glossary.html" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          What do these features mean?
+        </a>
+      </div>
+      <div class="quote-info" id="quote-info" style="display: none;">
+        <div class="quote-info-name" id="quote-info-name"></div>
+        <div class="quote-info-meta">
+          <div class="quote-info-dates" id="quote-info-dates"></div>
+          <div class="version-selector" id="version-selector" style="display: none;">
+            <div class="version-badge" onclick="toggleVersionDropdown()">
+              <span id="version-badge-text">v1</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+            <div class="version-dropdown" id="version-dropdown"></div>
+          </div>
+        </div>
+      </div>
     </div>
     
     <div class="progress-bar">
@@ -793,9 +950,18 @@
       <!-- Step 1: Discovery & Package -->
       <div class="step" id="step-1">
         <div class="step-header">
-          <span class="step-number">1</span>
-          <h2 class="step-title">Discovery & Package</h2>
-          <p class="step-subtitle">Select discovery phase and base package</p>
+          <div class="step-header-left">
+            <span class="step-number">1</span>
+            <h2 class="step-title">Discovery & Package</h2>
+            <p class="step-subtitle">Select discovery phase and base package</p>
+          </div>
+          <button class="btn-save-quote" onclick="saveQuote()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="save-btn-text">Save Quote</span>
+          </button>
         </div>
         
         <div class="section-label">Discovery Phase</div>
@@ -873,17 +1039,29 @@
         </div>
         
         <div class="nav-buttons">
-          <div></div>
-          <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+          <div class="nav-left"></div>
+          <div class="nav-right">
+            <a class="start-over-link" onclick="startOver()">Start Over</a>
+            <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+          </div>
         </div>
       </div>
       
       <!-- Step 2: Platforms -->
       <div class="step hidden" id="step-2">
         <div class="step-header">
-          <span class="step-number">2</span>
-          <h2 class="step-title">Platform Selection</h2>
-          <p class="step-subtitle" id="platform-subtitle">Select your data platforms</p>
+          <div class="step-header-left">
+            <span class="step-number">2</span>
+            <h2 class="step-title">Platform Selection</h2>
+            <p class="step-subtitle" id="platform-subtitle">Select your data platforms</p>
+          </div>
+          <button class="btn-save-quote" onclick="saveQuote()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="save-btn-text">Save Quote</span>
+          </button>
         </div>
         
         <div class="platform-counter" id="platform-counter">
@@ -915,17 +1093,31 @@
         
         
         <div class="nav-buttons">
-          <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
-          <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+          <div class="nav-left">
+            <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+          </div>
+          <div class="nav-right">
+            <a class="start-over-link" onclick="startOver()">Start Over</a>
+            <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+          </div>
         </div>
       </div>
       
       <!-- Step 3: Additional Data & Pages -->
       <div class="step hidden" id="step-3">
         <div class="step-header">
-          <span class="step-number">3</span>
-          <h2 class="step-title">Additional Data & Pages</h2>
-          <p class="step-subtitle">Extra data sources and dashboard pages</p>
+          <div class="step-header-left">
+            <span class="step-number">3</span>
+            <h2 class="step-title">Additional Data & Pages</h2>
+            <p class="step-subtitle">Extra data sources and dashboard pages</p>
+          </div>
+          <button class="btn-save-quote" onclick="saveQuote()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="save-btn-text">Save Quote</span>
+          </button>
         </div>
         
         <div class="quantity-row">
@@ -965,17 +1157,31 @@
         </div>
         
         <div class="nav-buttons">
-          <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
-          <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+          <div class="nav-left">
+            <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+          </div>
+          <div class="nav-right">
+            <a class="start-over-link" onclick="startOver()">Start Over</a>
+            <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+          </div>
         </div>
       </div>
       
       <!-- Step 4: Data Transformations -->
       <div class="step hidden" id="step-4">
         <div class="step-header">
-          <span class="step-number">4</span>
-          <h2 class="step-title">Data Transformations</h2>
-          <p class="step-subtitle">Classification, groupings, and custom metrics</p>
+          <div class="step-header-left">
+            <span class="step-number">4</span>
+            <h2 class="step-title">Data Transformations</h2>
+            <p class="step-subtitle">Classification, groupings, and custom metrics / parameters</p>
+          </div>
+          <button class="btn-save-quote" onclick="saveQuote()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="save-btn-text">Save Quote</span>
+          </button>
         </div>
         
         <div class="info-box" id="sheets-info">
@@ -1042,8 +1248,8 @@
         
         <div class="quantity-row" id="custom-metrics-row">
           <div>
-            <div class="quantity-label">Custom Metrics</div>
-            <div class="quantity-desc">Calculated fields, ratios, or composite metrics — $200 – $350 each</div>
+            <div class="quantity-label">Custom Metrics / Parameters</div>
+            <div class="quantity-desc">Calculated fields, selectable filters, or composite metrics — $200 – $350 each</div>
           </div>
           <div class="quantity-controls">
             <button class="qty-btn" onclick="adjustQty('customMetrics', -1)">−</button>
@@ -1053,21 +1259,35 @@
         </div>
         
         <div class="info-box" id="custom-metrics-included" style="display: none;">
-          <strong>Custom Metrics Included:</strong> Your selected package includes custom calculated metrics at no additional charge.
+          <strong>Custom Metrics / Parameters Included:</strong> Your selected package includes custom calculated metrics and parameters at no additional charge.
         </div>
         
         <div class="nav-buttons">
-          <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
-          <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+          <div class="nav-left">
+            <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+          </div>
+          <div class="nav-right">
+            <a class="start-over-link" onclick="startOver()">Start Over</a>
+            <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+          </div>
         </div>
       </div>
       
       <!-- Step 5: Summary -->
       <div class="step hidden" id="step-5">
         <div class="step-header">
-          <span class="step-number">5</span>
-          <h2 class="step-title">Quote Summary</h2>
-          <p class="step-subtitle">Review your project configuration</p>
+          <div class="step-header-left">
+            <span class="step-number">5</span>
+            <h2 class="step-title">Quote Summary</h2>
+            <p class="step-subtitle">Review your project configuration</p>
+          </div>
+          <button class="btn-save-quote" onclick="saveQuote()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="save-btn-text">Save Quote</span>
+          </button>
         </div>
         
         <div id="summary-content"></div>
@@ -1120,8 +1340,12 @@
         <button class="btn-copy" onclick="copyQuote()">📋 Copy Quote to Clipboard</button>
         
         <div class="nav-buttons">
-          <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
-          <button class="btn btn-primary" onclick="startOver()">Start Over</button>
+          <div class="nav-left">
+            <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+          </div>
+          <div class="nav-right">
+            <a class="start-over-link" onclick="startOver()">Start Over</a>
+          </div>
         </div>
       </div>
     </div>
@@ -1133,7 +1357,7 @@
   <div class="modal-overlay" id="share-modal">
     <div class="modal">
       <div id="modal-step-1">
-        <h3>Save Quote</h3>
+        <h3 id="modal-title">Save Quote</h3>
         <p>Name this quote for easy reference:</p>
         
         <div class="modal-form">
@@ -1228,6 +1452,9 @@ let currentStep = 1;
 let maxStepReached = 1;
 let loadedFromUrl = false;
 let savedQuoteName = null;
+let savedQuoteDates = { created: null, updated: null };
+let quoteVersions = []; // Array of previous versions
+let currentVersionIndex = 0; // Which version we're viewing (0 = current/latest)
 let state = {
   discovery: null,
   package: null,
@@ -1258,10 +1485,16 @@ function init() {
       state = decoded.state;
       maxStepReached = decoded.maxStep || 1;
       savedQuoteName = decoded.name || null;
+      savedQuoteDates = decoded.dates || { created: null, updated: null };
+      quoteVersions = decoded.versions || [];
+      currentVersionIndex = 0; // Always start at current version
       loadedFromUrl = true;
       
       // Restore UI state
       restoreUIState();
+      
+      // Update header with quote info
+      updateHeaderQuoteInfo();
       
       // Go to appropriate step
       if (maxStepReached >= 5) {
@@ -1544,6 +1777,12 @@ function updateUI() {
   const timelineEl = document.getElementById('timeline-estimate');
   if (timelineEl) timelineEl.textContent = timeline;
   
+  // Update save button text based on whether quote has been saved before
+  const saveButtonText = savedQuoteDates.created ? 'Re-save Quote' : 'Save Quote';
+  document.querySelectorAll('.save-btn-text').forEach(el => {
+    el.textContent = saveButtonText;
+  });
+  
   updateSheetsUI();
 }
 
@@ -1664,7 +1903,7 @@ function calculateQuote() {
     const metMax = state.customMetrics * pricing.customMetric.max;
     minTotal += metMin;
     maxTotal += metMax;
-    items.push({ name: `Custom metrics (×${state.customMetrics})`, min: metMin, max: metMax });
+    items.push({ name: `Custom metrics / parameters (×${state.customMetrics})`, min: metMin, max: metMax });
   }
   
   return { 
@@ -1843,13 +2082,26 @@ function saveQuote() {
   document.getElementById('modal-step-1').style.display = 'block';
   document.getElementById('modal-step-2').style.display = 'none';
   
-  // Clear form fields
-  document.getElementById('agency-name').value = '';
-  document.getElementById('client-name-agency').value = '';
-  document.getElementById('client-name-direct').value = '';
+  // Update modal title based on whether this is a re-save
+  document.getElementById('modal-title').textContent = savedQuoteDates.created ? 'Re-save Quote' : 'Save Quote';
   
-  // Reset to agency type
-  selectClientType('agency');
+  // Pre-fill form fields if re-saving
+  if (savedQuoteName) {
+    if (savedQuoteName.type === 'agency') {
+      selectClientType('agency');
+      document.getElementById('agency-name').value = savedQuoteName.agency || '';
+      document.getElementById('client-name-agency').value = savedQuoteName.client || '';
+    } else {
+      selectClientType('direct');
+      document.getElementById('client-name-direct').value = savedQuoteName.client || '';
+    }
+  } else {
+    // Clear form fields for new quote
+    document.getElementById('agency-name').value = '';
+    document.getElementById('client-name-agency').value = '';
+    document.getElementById('client-name-direct').value = '';
+    selectClientType('agency');
+  }
   
   document.getElementById('share-modal').classList.add('visible');
 }
@@ -1896,14 +2148,69 @@ function generateShareUrl() {
     };
   }
   
+  // Update maxStepReached to current step
+  maxStepReached = Math.max(maxStepReached, currentStep);
+  
+  // Handle dates - preserve created date if re-saving, update updated date
+  const now = new Date().toISOString();
+  const quoteDates = {
+    created: savedQuoteDates.created || now,
+    updated: now
+  };
+  
+  // If re-saving, save the previous state as a version
+  if (savedQuoteDates.created && savedQuoteDates.updated) {
+    // Get the previous state from URL (before this save)
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentSavedQuote = urlParams.get('q');
+    if (currentSavedQuote) {
+      try {
+        const previousData = JSON.parse(atob(currentSavedQuote));
+        // Add previous state to versions array
+        quoteVersions.unshift({
+          state: previousData.state,
+          maxStep: previousData.maxStep,
+          date: savedQuoteDates.updated,
+          versionNum: quoteVersions.length + 1
+        });
+        // Keep only last 10 versions
+        if (quoteVersions.length > 10) {
+          quoteVersions = quoteVersions.slice(0, 10);
+        }
+      } catch (e) {
+        console.error('Failed to save version:', e);
+      }
+    }
+  }
+  
   const quoteData = {
     state: state,
     maxStep: maxStepReached,
-    name: quoteName
+    name: quoteName,
+    dates: quoteDates,
+    versions: quoteVersions
   };
   
   const encoded = btoa(JSON.stringify(quoteData));
-  const url = window.location.origin + window.location.pathname + '?q=' + encoded;
+  const baseUrl = 'https://dashboardquoter.growthmad.com';
+  const url = baseUrl + '?q=' + encoded;
+  
+  // Update browser URL so the same link can be used
+  window.history.replaceState({}, '', '?q=' + encoded);
+  
+  // Update saved state
+  savedQuoteName = quoteName;
+  savedQuoteDates = quoteDates;
+  currentVersionIndex = 0;
+  loadedFromUrl = true;
+  
+  // Update save button text
+  document.querySelectorAll('.save-btn-text').forEach(el => {
+    el.textContent = 'Re-save Quote';
+  });
+  
+  // Update header with quote info
+  updateHeaderQuoteInfo();
   
   // Show step 2
   document.getElementById('modal-step-1').style.display = 'none';
@@ -1917,6 +2224,174 @@ function generateShareUrl() {
   
   document.getElementById('share-url').textContent = url;
 }
+
+function updateHeaderQuoteInfo() {
+  const quoteInfoEl = document.getElementById('quote-info');
+  const quoteInfoNameEl = document.getElementById('quote-info-name');
+  const quoteInfoDatesEl = document.getElementById('quote-info-dates');
+  const versionSelectorEl = document.getElementById('version-selector');
+  const versionBadgeTextEl = document.getElementById('version-badge-text');
+  const versionDropdownEl = document.getElementById('version-dropdown');
+  
+  if (savedQuoteName && savedQuoteDates.created) {
+    // Build name display
+    const nameDisplay = savedQuoteName.type === 'agency'
+      ? `${savedQuoteName.agency} — ${savedQuoteName.client}`
+      : savedQuoteName.client;
+    
+    // Format dates
+    const formatDate = (isoString) => {
+      const date = new Date(isoString);
+      return date.toLocaleDateString('en-AU', { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric'
+      });
+    };
+    
+    const formatDateTime = (isoString) => {
+      const date = new Date(isoString);
+      return date.toLocaleDateString('en-AU', { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    };
+    
+    const createdDate = formatDate(savedQuoteDates.created);
+    const updatedDate = formatDate(savedQuoteDates.updated);
+    
+    let datesDisplay = `Created: ${createdDate}`;
+    if (savedQuoteDates.created !== savedQuoteDates.updated) {
+      datesDisplay += ` • Updated: ${updatedDate}`;
+    }
+    
+    quoteInfoNameEl.textContent = nameDisplay;
+    quoteInfoDatesEl.textContent = datesDisplay;
+    quoteInfoEl.style.display = 'block';
+    
+    // Show version selector if there are versions
+    const totalVersions = quoteVersions.length + 1; // +1 for current version
+    if (totalVersions > 1) {
+      const currentVersionNum = totalVersions - currentVersionIndex;
+      versionBadgeTextEl.textContent = `v${currentVersionNum} of ${totalVersions}`;
+      versionSelectorEl.style.display = 'inline-block';
+      
+      // Build version dropdown
+      let dropdownHtml = '';
+      
+      // Current version
+      dropdownHtml += `
+        <div class="version-item ${currentVersionIndex === 0 ? 'current' : ''}" onclick="loadVersion(0)">
+          <div class="version-item-num">v${totalVersions} (Current)</div>
+          <div class="version-item-date">${formatDateTime(savedQuoteDates.updated)}</div>
+        </div>
+      `;
+      
+      // Previous versions
+      quoteVersions.forEach((version, index) => {
+        const versionNum = totalVersions - (index + 1);
+        dropdownHtml += `
+          <div class="version-item ${currentVersionIndex === index + 1 ? 'current' : ''}" onclick="loadVersion(${index + 1})">
+            <div class="version-item-num">v${versionNum}</div>
+            <div class="version-item-date">${formatDateTime(version.date)}</div>
+          </div>
+        `;
+      });
+      
+      versionDropdownEl.innerHTML = dropdownHtml;
+    } else {
+      versionSelectorEl.style.display = 'none';
+    }
+  } else {
+    quoteInfoEl.style.display = 'none';
+  }
+}
+
+function toggleVersionDropdown() {
+  const dropdown = document.getElementById('version-dropdown');
+  dropdown.classList.toggle('visible');
+}
+
+function loadVersion(versionIndex) {
+  // Close dropdown
+  document.getElementById('version-dropdown').classList.remove('visible');
+  
+  if (versionIndex === 0) {
+    // Load current version - reload from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const savedQuote = urlParams.get('q');
+    if (savedQuote) {
+      try {
+        const decoded = JSON.parse(atob(savedQuote));
+        state = decoded.state;
+        maxStepReached = decoded.maxStep || 1;
+        currentVersionIndex = 0;
+        
+        // Restore UI state
+        resetUIElements();
+        restoreUIState();
+        
+        // Go to appropriate step
+        if (maxStepReached >= 5) {
+          currentStep = 5;
+          renderSummary();
+        } else {
+          currentStep = maxStepReached;
+        }
+        
+        updateUI();
+        updateHeaderQuoteInfo();
+        showToast('Loaded current version');
+      } catch (e) {
+        console.error('Failed to load version:', e);
+      }
+    }
+  } else {
+    // Load previous version
+    const version = quoteVersions[versionIndex - 1];
+    if (version) {
+      state = JSON.parse(JSON.stringify(version.state)); // Deep copy
+      maxStepReached = version.maxStep || 1;
+      currentVersionIndex = versionIndex;
+      
+      // Restore UI state
+      resetUIElements();
+      restoreUIState();
+      
+      // Go to appropriate step
+      if (maxStepReached >= 5) {
+        currentStep = 5;
+        renderSummary();
+      } else {
+        currentStep = maxStepReached;
+      }
+      
+      updateUI();
+      updateHeaderQuoteInfo();
+      showToast(`Loaded version ${quoteVersions.length + 1 - versionIndex}`);
+    }
+  }
+}
+
+function resetUIElements() {
+  // Reset all UI elements before restoring state
+  document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.extra').forEach(el => el.classList.remove('extra'));
+  document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+  document.querySelectorAll('.qty-value').forEach(el => el.textContent = '0');
+}
+
+// Close version dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  const dropdown = document.getElementById('version-dropdown');
+  const selector = document.getElementById('version-selector');
+  if (dropdown && selector && !selector.contains(e.target)) {
+    dropdown.classList.remove('visible');
+  }
+});
 
 function copyShareUrl() {
   const url = document.getElementById('share-url').textContent;
@@ -2006,7 +2481,7 @@ function restoreUIState() {
 
 function editQuote() {
   loadedFromUrl = false;
-  savedQuoteName = null;
+  // Note: keep savedQuoteName and savedQuoteDates for re-saving
   currentStep = 1;
   updateUI();
   
@@ -2038,13 +2513,10 @@ function startOver() {
     support: 'none'
   };
   
-  // Reset tracking
+  // Reset step tracking but keep quote identity if loaded from URL
   maxStepReached = 1;
-  loadedFromUrl = false;
-  savedQuoteName = null;
-  
-  // Clear URL parameter
-  window.history.replaceState({}, '', window.location.pathname);
+  // Don't clear savedQuoteName or loadedFromUrl - the quote identity remains
+  // User must click re-save to update the saved version
   
   // Reset all UI elements
   document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
