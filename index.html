@@ -41,6 +41,7 @@
       background: var(--black);
       margin: -20px -20px 0 -20px;
       padding: 40px 40px 30px;
+      position: relative;
     }
     .header h1 { 
       font-size: 36px; 
@@ -55,6 +56,161 @@
       font-weight: 500;
       letter-spacing: 1px;
       text-transform: uppercase;
+    }
+    .btn-save-quote {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--cyan);
+      color: var(--black);
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-save-quote:hover {
+      background: var(--white);
+      transform: translateY(-1px);
+    }
+    
+    /* Share Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s;
+    }
+    .modal-overlay.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+    .modal h3 {
+      color: var(--black);
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+    .modal p {
+      color: var(--gray);
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .modal-url {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 12px;
+      word-break: break-all;
+      color: var(--black);
+      margin-bottom: 15px;
+      text-align: left;
+      max-height: 80px;
+      overflow-y: auto;
+    }
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .modal-buttons .btn {
+      min-width: 120px;
+    }
+    .modal-note {
+      margin-top: 15px;
+      font-size: 12px;
+      color: var(--gray);
+    }
+    .modal-form {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .modal-toggle-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .modal-toggle {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #ddd;
+      background: #f5f5f5;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--black);
+    }
+    .modal-toggle:hover {
+      border-color: var(--cyan);
+    }
+    .modal-toggle.selected {
+      border-color: var(--cyan);
+      background: #e6f9fc;
+    }
+    .modal-field {
+      margin-bottom: 15px;
+    }
+    .modal-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 6px;
+    }
+    .modal-field input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .modal-field input:focus {
+      outline: none;
+      border-color: var(--cyan);
+    }
+    
+    /* Edit mode banner */
+    .edit-banner {
+      background: var(--cyan);
+      color: var(--black);
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .edit-banner span {
+      font-weight: 500;
+    }
+    .edit-banner .btn {
+      padding: 6px 14px;
+      font-size: 13px;
     }
     
     .progress-bar {
@@ -261,6 +417,10 @@
     .checkbox-item input {
       margin-right: 10px;
       accent-color: var(--cyan);
+      pointer-events: none;
+    }
+    .checkbox-item .platform-label {
+      flex: 1;
     }
     .checkbox-item .premium-badge {
       margin-left: auto;
@@ -612,6 +772,13 @@
     <div class="header">
       <h1>Dashboard Quoter</h1>
       <p>Growth Mad Consulting</p>
+      <button class="btn-save-quote" onclick="saveQuote()" title="Save & Share Quote">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        Save Quote
+      </button>
     </div>
     
     <div class="progress-bar">
@@ -961,6 +1128,57 @@
   </div>
   
   <div class="toast" id="toast">Quote copied to clipboard!</div>
+  
+  <!-- Share Modal -->
+  <div class="modal-overlay" id="share-modal">
+    <div class="modal">
+      <div id="modal-step-1">
+        <h3>Save Quote</h3>
+        <p>Name this quote for easy reference:</p>
+        
+        <div class="modal-form">
+          <div class="modal-toggle-group">
+            <button class="modal-toggle selected" data-client-type="agency" onclick="selectClientType('agency')">Agency Client</button>
+            <button class="modal-toggle" data-client-type="direct" onclick="selectClientType('direct')">Direct Client</button>
+          </div>
+          
+          <div id="agency-fields">
+            <div class="modal-field">
+              <label>Agency Name</label>
+              <input type="text" id="agency-name" placeholder="e.g., Digital Marketing Co">
+            </div>
+            <div class="modal-field">
+              <label>Client Name</label>
+              <input type="text" id="client-name-agency" placeholder="e.g., Acme Corporation">
+            </div>
+          </div>
+          
+          <div id="direct-fields" style="display: none;">
+            <div class="modal-field">
+              <label>Client Name</label>
+              <input type="text" id="client-name-direct" placeholder="e.g., Acme Corporation">
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-buttons">
+          <button class="btn btn-primary" onclick="generateShareUrl()">Generate Link</button>
+          <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        </div>
+      </div>
+      
+      <div id="modal-step-2" style="display: none;">
+        <h3>Quote Saved!</h3>
+        <p id="quote-name-display"></p>
+        <div class="modal-url" id="share-url"></div>
+        <div class="modal-buttons">
+          <button class="btn btn-primary" onclick="copyShareUrl()">Copy Link</button>
+          <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+        </div>
+        <p class="modal-note">Bookmark this link or share it with your team.</p>
+      </div>
+    </div>
+  </div>
 
 <script>
 // Platform data
@@ -968,13 +1186,13 @@ const platforms = {
   ad: [
     'Google Ads', 'Meta Ads', 'LinkedIn Ads', 'Microsoft Ads', 
     'TikTok Ads', 'Pinterest Ads', 'Twitter / X Ads', 'Snapchat Ads',
-    'Amazon Ads', 'Apple Search Ads', 'Reddit Ads', 'Quora Ads'
+    'Amazon Ads', 'Apple Search Ads', 'Reddit Ads'
   ],
   web: ['Google Analytics 4', 'Google Search Console', 'Adobe Analytics'],
   social: ['Facebook Pages', 'Instagram', 'LinkedIn Pages', 'YouTube', 'TikTok'],
   email: ['Mailchimp', 'Klaviyo', 'HubSpot Marketing', 'ActiveCampaign', 'Braze'],
   ecom: ['Shopify', 'WooCommerce', 'BigCommerce', 'Magento'],
-  premium: ['Salesforce', 'HubSpot CRM', 'Xero', 'QuickBooks', 'NetSuite']
+  premium: ['Salesforce', 'HubSpot CRM']
 };
 
 // Package definitions with 10% discounted prices
@@ -1007,6 +1225,9 @@ const pricing = {
 
 // State
 let currentStep = 1;
+let maxStepReached = 1;
+let loadedFromUrl = false;
+let savedQuoteName = null;
 let state = {
   discovery: null,
   package: null,
@@ -1026,6 +1247,34 @@ let state = {
 // Initialize
 function init() {
   renderPlatforms();
+  
+  // Check for saved quote in URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const savedQuote = urlParams.get('q');
+  
+  if (savedQuote) {
+    try {
+      const decoded = JSON.parse(atob(savedQuote));
+      state = decoded.state;
+      maxStepReached = decoded.maxStep || 1;
+      savedQuoteName = decoded.name || null;
+      loadedFromUrl = true;
+      
+      // Restore UI state
+      restoreUIState();
+      
+      // Go to appropriate step
+      if (maxStepReached >= 5) {
+        currentStep = 5;
+        renderSummary();
+      } else {
+        currentStep = maxStepReached;
+      }
+    } catch (e) {
+      console.error('Failed to load quote from URL:', e);
+    }
+  }
+  
   updateUI();
 }
 
@@ -1047,17 +1296,14 @@ function renderPlatforms() {
       const div = document.createElement('div');
       div.className = 'checkbox-item';
       div.innerHTML = `
-        <input type="checkbox" id="platform-${platform.replace(/\s+/g, '-')}" 
-               onchange="togglePlatform('${platform}', ${isPremium})">
-        <label for="platform-${platform.replace(/\s+/g, '-')}">${platform}</label>
+        <input type="checkbox" id="platform-${platform.replace(/\s+/g, '-')}">
+        <span class="platform-label">${platform}</span>
         ${isPremium ? '<span class="premium-badge">PREMIUM</span>' : ''}
       `;
-      div.onclick = (e) => {
-        if (e.target.tagName !== 'INPUT') {
-          const checkbox = div.querySelector('input');
-          checkbox.checked = !checkbox.checked;
-          togglePlatform(platform, isPremium);
-        }
+      div.onclick = () => {
+        const checkbox = div.querySelector('input');
+        checkbox.checked = !checkbox.checked;
+        togglePlatform(platform, isPremium);
       };
       container.appendChild(div);
     });
@@ -1257,6 +1503,7 @@ function nextStep() {
   
   if (currentStep < 5) {
     currentStep++;
+    maxStepReached = Math.max(maxStepReached, currentStep);
     updateUI();
     
     if (currentStep === 5) {
@@ -1433,6 +1680,31 @@ function renderSummary() {
   const quote = calculateQuote();
   const platformsList = [...state.platforms, ...state.premiumPlatforms];
   
+  // Quote name header if loaded from URL
+  let quoteHeader = '';
+  if (loadedFromUrl && savedQuoteName) {
+    const nameDisplay = savedQuoteName.type === 'agency'
+      ? `${savedQuoteName.client} <span style="color: var(--gray); font-weight: 400;">(via ${savedQuoteName.agency})</span>`
+      : savedQuoteName.client;
+    quoteHeader = `
+    <div class="summary-section" style="text-align: center; padding-bottom: 15px; border-bottom: 1px solid #eee; margin-bottom: 15px;">
+      <div style="font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Quote for</div>
+      <div style="font-size: 22px; font-weight: 700; color: var(--black);">${nameDisplay}</div>
+    </div>
+    `;
+  }
+  
+  // Edit banner for saved quotes
+  let editBanner = '';
+  if (loadedFromUrl) {
+    editBanner = `
+    <div class="edit-banner">
+      <span>📋 Viewing saved quote</span>
+      <button class="btn btn-secondary" onclick="editQuote()">Edit Quote</button>
+    </div>
+    `;
+  }
+  
   // Build included features list for Transformation
   let includedFeatures = '';
   if (state.package === 'transformation') {
@@ -1452,6 +1724,8 @@ function renderSummary() {
   }
   
   let html = `
+    ${editBanner}
+    ${quoteHeader}
     <div class="summary-section">
       <div class="summary-title">Platforms Selected (${platformsList.length})</div>
       <p class="platforms-list">${platformsList.join(', ') || 'None selected'}</p>
@@ -1561,6 +1835,185 @@ function copyQuote() {
   });
 }
 
+// Save/Share Quote Functions
+let clientType = 'agency';
+
+function saveQuote() {
+  // Reset modal to step 1
+  document.getElementById('modal-step-1').style.display = 'block';
+  document.getElementById('modal-step-2').style.display = 'none';
+  
+  // Clear form fields
+  document.getElementById('agency-name').value = '';
+  document.getElementById('client-name-agency').value = '';
+  document.getElementById('client-name-direct').value = '';
+  
+  // Reset to agency type
+  selectClientType('agency');
+  
+  document.getElementById('share-modal').classList.add('visible');
+}
+
+function selectClientType(type) {
+  clientType = type;
+  
+  document.querySelectorAll('.modal-toggle').forEach(el => {
+    el.classList.toggle('selected', el.dataset.clientType === type);
+  });
+  
+  document.getElementById('agency-fields').style.display = type === 'agency' ? 'block' : 'none';
+  document.getElementById('direct-fields').style.display = type === 'direct' ? 'block' : 'none';
+}
+
+function generateShareUrl() {
+  let quoteName = {};
+  
+  if (clientType === 'agency') {
+    const agencyName = document.getElementById('agency-name').value.trim();
+    const clientName = document.getElementById('client-name-agency').value.trim();
+    
+    if (!agencyName || !clientName) {
+      alert('Please enter both agency name and client name.');
+      return;
+    }
+    
+    quoteName = {
+      type: 'agency',
+      agency: agencyName,
+      client: clientName
+    };
+  } else {
+    const clientName = document.getElementById('client-name-direct').value.trim();
+    
+    if (!clientName) {
+      alert('Please enter the client name.');
+      return;
+    }
+    
+    quoteName = {
+      type: 'direct',
+      client: clientName
+    };
+  }
+  
+  const quoteData = {
+    state: state,
+    maxStep: maxStepReached,
+    name: quoteName
+  };
+  
+  const encoded = btoa(JSON.stringify(quoteData));
+  const url = window.location.origin + window.location.pathname + '?q=' + encoded;
+  
+  // Show step 2
+  document.getElementById('modal-step-1').style.display = 'none';
+  document.getElementById('modal-step-2').style.display = 'block';
+  
+  // Display quote name
+  const nameDisplay = quoteName.type === 'agency' 
+    ? `Quote for <strong>${quoteName.client}</strong> (via ${quoteName.agency})`
+    : `Quote for <strong>${quoteName.client}</strong>`;
+  document.getElementById('quote-name-display').innerHTML = nameDisplay;
+  
+  document.getElementById('share-url').textContent = url;
+}
+
+function copyShareUrl() {
+  const url = document.getElementById('share-url').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('Link copied to clipboard!');
+  }).catch(() => {
+    const textarea = document.createElement('textarea');
+    textarea.value = url;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showToast('Link copied to clipboard!');
+  });
+}
+
+function closeModal() {
+  document.getElementById('share-modal').classList.remove('visible');
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('share-modal');
+  if (e.target === modal) {
+    closeModal();
+  }
+});
+
+function restoreUIState() {
+  // Restore discovery selection
+  if (state.discovery) {
+    document.querySelectorAll('[data-discovery]').forEach(el => {
+      el.classList.toggle('selected', el.dataset.discovery === state.discovery);
+    });
+  }
+  
+  // Restore package selection
+  if (state.package) {
+    document.querySelectorAll('[data-package]').forEach(el => {
+      el.classList.toggle('selected', el.dataset.package === state.package);
+    });
+    updatePackageUI();
+  }
+  
+  // Restore platform checkboxes
+  state.platforms.forEach(platform => {
+    const checkbox = document.getElementById(`platform-${platform.replace(/\s+/g, '-')}`);
+    if (checkbox) {
+      checkbox.checked = true;
+      checkbox.closest('.checkbox-item').classList.add('selected');
+    }
+  });
+  
+  // Restore premium platform checkboxes
+  state.premiumPlatforms.forEach(platform => {
+    const checkbox = document.getElementById(`platform-${platform.replace(/\s+/g, '-')}`);
+    if (checkbox) {
+      checkbox.checked = true;
+      checkbox.closest('.checkbox-item').classList.add('selected');
+    }
+  });
+  
+  // Restore quantities
+  document.getElementById('qty-extraSources').textContent = state.extraSources;
+  document.getElementById('qty-extraPages').textContent = state.extraPages;
+  document.getElementById('qty-classifications').textContent = state.classifications;
+  document.getElementById('qty-conversionGroupings').textContent = state.conversionGroupings;
+  document.getElementById('qty-dataUnification').textContent = state.dataUnification;
+  document.getElementById('qty-customMetrics').textContent = state.customMetrics;
+  
+  // Restore toggles
+  const customToggle = document.getElementById('toggle-customIntegration');
+  const sheetsToggle = document.getElementById('toggle-sheetsLayer');
+  if (customToggle) customToggle.checked = state.customIntegration;
+  if (sheetsToggle) sheetsToggle.checked = state.sheetsLayer;
+  
+  // Restore support selection
+  if (state.support) {
+    document.querySelectorAll('[data-support]').forEach(el => {
+      el.classList.toggle('selected', el.dataset.support === state.support);
+    });
+  }
+  
+  // Update platform counter
+  updatePlatformCount();
+}
+
+function editQuote() {
+  loadedFromUrl = false;
+  savedQuoteName = null;
+  currentStep = 1;
+  updateUI();
+  
+  // Clear URL parameter
+  window.history.replaceState({}, '', window.location.pathname);
+}
+
 function showToast(message) {
   const toast = document.getElementById('toast');
   toast.textContent = message;
@@ -1584,6 +2037,14 @@ function startOver() {
     customMetrics: 0,
     support: 'none'
   };
+  
+  // Reset tracking
+  maxStepReached = 1;
+  loadedFromUrl = false;
+  savedQuoteName = null;
+  
+  // Clear URL parameter
+  window.history.replaceState({}, '', window.location.pathname);
   
   // Reset all UI elements
   document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
