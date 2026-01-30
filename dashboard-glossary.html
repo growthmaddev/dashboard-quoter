@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Features Explained | Growth Mad</title>
+  <style>
+    :root {
+      --black: #1a1a1a;
+      --white: #ffffff;
+      --gray: #6b7280;
+      --light-gray: #f3f4f6;
+      --cyan: #00a0b8;
+      --cyan-light: #e6f9fc;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--light-gray);
+      color: var(--black);
+      line-height: 1.6;
+    }
+    
+    .header {
+      background: var(--black);
+      color: var(--white);
+      padding: 40px 20px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .header-logo {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+    
+    .header-logo:hover {
+      opacity: 1;
+    }
+    
+    .header-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    
+    .header p {
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    .header a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+    
+    .header a:hover {
+      text-decoration: underline;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    .intro {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .intro p {
+      color: var(--gray);
+      font-size: 15px;
+    }
+    
+    .toc {
+      background: var(--cyan-light);
+      border-radius: 8px;
+      padding: 20px 25px;
+      margin-bottom: 30px;
+    }
+    
+    .toc h3 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--cyan);
+      margin-bottom: 12px;
+    }
+    
+    .toc ul {
+      list-style: none;
+      columns: 2;
+      column-gap: 30px;
+    }
+    
+    .toc li {
+      margin-bottom: 8px;
+    }
+    
+    .toc a {
+      color: var(--black);
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    .toc a:hover {
+      color: var(--cyan);
+    }
+    
+    .section {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .section h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--cyan);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .section h2 .icon {
+      width: 28px;
+      height: 28px;
+      background: var(--cyan-light);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    
+    .section h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--cyan);
+      margin: 20px 0 10px 0;
+    }
+    
+    .section p {
+      margin-bottom: 12px;
+      color: #444;
+    }
+    
+    .section ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+    
+    .section li {
+      margin-bottom: 6px;
+      color: #444;
+    }
+    
+    .example-box {
+      background: var(--light-gray);
+      border-left: 3px solid var(--cyan);
+      padding: 15px 20px;
+      margin: 15px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .example-box strong {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--cyan);
+      margin-bottom: 8px;
+    }
+    
+    .example-box p {
+      margin: 0;
+      font-size: 14px;
+    }
+    
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 15px 0;
+    }
+    
+    .comparison-item {
+      background: var(--light-gray);
+      padding: 15px;
+      border-radius: 8px;
+    }
+    
+    .comparison-item.before {
+      border-top: 3px solid #ef4444;
+    }
+    
+    .comparison-item.after {
+      border-top: 3px solid #22c55e;
+    }
+    
+    .comparison-item strong {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    
+    .comparison-item.before strong {
+      color: #ef4444;
+    }
+    
+    .comparison-item.after strong {
+      color: #22c55e;
+    }
+    
+    .comparison-item code {
+      display: block;
+      font-family: monospace;
+      font-size: 12px;
+      margin: 3px 0;
+      color: #666;
+    }
+    
+    .back-link {
+      text-align: center;
+      margin-top: 30px;
+    }
+    
+    .back-link a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--black);
+      color: var(--white);
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: transform 0.2s;
+    }
+    
+    .back-link a:hover {
+      transform: translateY(-2px);
+    }
+    
+    @media (max-width: 600px) {
+      .toc ul {
+        columns: 1;
+      }
+      
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="https://growthmad.com" target="_blank" class="header-logo" title="Growth Mad">
+      <img src="https://images.squarespace-cdn.com/content/v1/60c7a7650204ad64eea3dd88/1625070492824-0M2B0BPMY5WRES1WKZ2Q/brandmark-design+%288%29.png?format=100w" alt="Growth Mad">
+    </a>
+    <h1>Dashboard Features Explained</h1>
+    <p>Simple explanations of what each quoter option means</p>
+    <p style="margin-top: 10px;"><a href="https://dashboardquoter.growthmad.com/">← Back to Quoter</a></p>
+  </div>
+  
+  <div class="container">
+    <div class="intro">
+      <p>When building a marketing dashboard, there's often more involved than just connecting data sources and displaying charts. This guide explains the key features and add-ons you might need, and why they matter for your reporting.</p>
+    </div>
+    
+    <div class="toc">
+      <h3>Quick Navigation</h3>
+      <ul>
+        <li><a href="#classifications">Campaign Classifications</a></li>
+        <li><a href="#groupings">Conversion / Event Groupings</a></li>
+        <li><a href="#unification">Data Unification</a></li>
+        <li><a href="#extra-sources">Extra Data Sources</a></li>
+        <li><a href="#pages">Additional Pages</a></li>
+        <li><a href="#integrations">Custom Integrations</a></li>
+        <li><a href="#metrics">Custom Metrics / Parameters</a></li>
+        <li><a href="#sheets">Google Sheets Layer</a></li>
+      </ul>
+    </div>
+    
+    <!-- Campaign Classifications -->
+    <div class="section" id="classifications">
+      <h2><span class="icon">🏷️</span> Campaign Classifications</h2>
+      
+      <h3>What is it?</h3>
+      <p>Campaign classification adds custom grouping labels to your campaigns that don't exist in the raw data. It lets you categorise campaigns by business logic like division, product line, funnel stage, or any other grouping that makes sense for your reporting.</p>
+      
+      <h3>Why do you need it?</h3>
+      <p>Ad platforms only know what you tell them. If you have 50 campaigns across different business units, the platform doesn't know which belong to "Recruitment" vs "Brand Awareness" vs "Product Sales". Classification adds that intelligence layer.</p>
+      
+      <div class="example-box">
+        <strong>Example</strong>
+        <p>You run campaigns for both volunteer recruitment and emergency alerts. By adding a "Division" classification, you can filter your dashboard to show only Volunteer campaigns, or compare performance across divisions - even though Google Ads has no idea these categories exist.</p>
+      </div>
+      
+      <h3>How it works</h3>
+      <p>We create a lookup table that maps campaign names (or IDs) to your custom categories. When a campaign matches a pattern, it gets tagged with the appropriate label. These labels become filterable dimensions in your dashboard.</p>
+      
+      <div class="comparison">
+        <div class="comparison-item before">
+          <strong>Without Classification</strong>
+          <code>2024_FB_VolunteerRecruit_Perth</code>
+          <code>2024_FB_FireAlert_Metro</code>
+          <code>2024_GADS_VolunteerRecruit_Rural</code>
+        </div>
+        <div class="comparison-item after">
+          <strong>With Classification</strong>
+          <code>Volunteer Recruitment → Perth</code>
+          <code>Emergency Alerts → Metro</code>
+          <code>Volunteer Recruitment → Rural</code>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Conversion Groupings -->
+    <div class="section" id="groupings">
+      <h2><span class="icon">🎯</span> Conversion / Event Groupings</h2>
+      
+      <h3>What is it?</h3>
+      <p>Conversion grouping standardises and consolidates the different conversion actions tracked across your platforms. It ensures consistent naming and allows you to combine related conversions into meaningful totals.</p>
+      
+      <h3>Why do you need it?</h3>
+      <p>Different platforms name things differently. Google Ads might track "Form_Submit_Contact_Page" while Meta tracks "lead" - but they're the same action. Without grouping, your dashboard shows fragmented, hard-to-compare data.</p>
+      
+      <div class="example-box">
+        <strong>Example</strong>
+        <p>You track 15 different conversion actions across Google and Meta. Some are variations of the same thing (Android app install vs iOS app install). Grouping lets you see "Total App Installs" as one number, while still being able to drill down to platform-specific details.</p>
+      </div>
+      
+      <h3>How it works</h3>
+      <p>We create a naming lookup that:</p>
+      <ul>
+        <li>Renames ugly technical names to readable labels</li>
+        <li>Maps equivalent conversions across platforms</li>
+        <li>Creates "rollup" metrics that sum related conversions</li>
+        <li>Adds selectable filters so you can choose which conversions to display</li>
+      </ul>
+      
+      <div class="comparison">
+        <div class="comparison-item before">
+          <strong>Raw Platform Names</strong>
+          <code>actions_app_site_visit</code>
+          <code>mybushfireplan_visitors</code>
+          <code>Fire Danger Rating Scale - Catastrophic</code>
+        </div>
+        <div class="comparison-item after">
+          <strong>After Grouping</strong>
+          <code>META - App Site Visit</code>
+          <code>META - MyBushFirePlan Visitors</code>
+          <code>GADS - FDRS Catastrophic</code>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Data Unification -->
+    <div class="section" id="unification">
+      <h2><span class="icon">🔗</span> Data Unification / Flat Table</h2>
+      
+      <h3>What is it?</h3>
+      <p>Data unification combines data from multiple ad platforms into a single, consistent table structure. This "flat table" or "master table" becomes the single source of truth for your dashboard.</p>
+      
+      <h3>Why do you need it?</h3>
+      <p>Each platform structures its data differently. Google Ads exports in one format, Meta in another. Without unification, you'd need separate charts for each platform and couldn't easily compare or total across them.</p>
+      
+      <div class="example-box">
+        <strong>Example</strong>
+        <p>You want to see "Total Ad Spend" across Google, Meta, LinkedIn, and TikTok. Without a unified table, you'd have to manually add up four different numbers. With unification, it's one metric that automatically totals everything.</p>
+      </div>
+      
+      <h3>How it works</h3>
+      <p>The unification process:</p>
+      <ul>
+        <li>Pulls data from each platform into a staging area</li>
+        <li>Standardizes column names (e.g., "Amount Spent" and "Cost" both become "Spend")</li>
+        <li>Aligns date formats and dimensions</li>
+        <li>Stacks all platforms vertically with a "Data Source" column to identify origin</li>
+        <li>Creates placeholder columns so all rows have the same structure</li>
+      </ul>
+      
+      <p>The result is one table where you can filter by platform, compare platforms side-by-side, or see totals across everything.</p>
+    </div>
+    
+    <!-- Extra Data Sources -->
+    <div class="section" id="extra-sources">
+      <h2><span class="icon">📊</span> Extra Data Sources</h2>
+      
+      <h3>What is it?</h3>
+      <p>Additional data structure exports from the same platform type. This is when you need a different table or report format from a platform you already have connected - requiring a separate data source in Looker Studio.</p>
+      
+      <h3>Why do you need it?</h3>
+      <p>Sometimes the standard data export from a platform doesn't contain everything you need. You might require a separate table with different dimensions, a different granularity level, or supplementary data that can't be combined in the same export.</p>
+      
+      <div class="example-box">
+        <strong>Example</strong>
+        <p>Your Google Ads connection pulls campaign-level data with standard metrics. But you also need ad group-level data with different dimensions, or a separate conversion breakdown table. Each distinct data structure requires its own data source configuration and Looker Studio connection.</p>
+      </div>
+      
+      <h3>Common scenarios</h3>
+      <ul>
+        <li>Campaign-level data plus a separate ad group or ad-level table</li>
+        <li>Base metrics table plus a separate conversions-only table (different structure)</li>
+        <li>Standard export plus a demographics or audience breakdown</li>
+        <li>Daily data plus a separate hourly or weekly aggregation</li>
+        <li>Multiple GA4 properties requiring separate connections</li>
+      </ul>
+      
+      <p><em>Note: Multiple ad accounts within the same platform are typically handled by the data connector (Power My Analytics) automatically - you don't need extra data sources just because you have multiple accounts.</em></p>
+    </div>
+    
+    <!-- Additional Pages -->
+    <div class="section" id="pages">
+      <h2><span class="icon">📄</span> Additional Pages</h2>
+      
+      <h3>What is it?</h3>
+      <p>Extra pages or views within your dashboard beyond what's included in your package. Each page typically focuses on a specific aspect of your data or a particular audience's needs.</p>
+      
+      <h3>Why do you need it?</h3>
+      <p>Different stakeholders need different views. Executives want high-level summaries, campaign managers want detailed breakdowns, and finance needs budget tracking. More pages means more tailored views.</p>
+      
+      <div class="example-box">
+        <strong>Example Pages</strong>
+        <p>Executive Summary (KPIs only) → Campaign Performance (detailed metrics) → Channel Comparison (platform vs platform) → Budget Pacing (spend tracking) → Demographics (audience insights) → Conversion Analysis (funnel view)</p>
+      </div>
+      
+      <h3>What counts as a page?</h3>
+      <ul>
+        <li>A distinct tab or view in Looker Studio</li>
+        <li>Typically focused on one topic or audience</li>
+        <li>May share the same data source but presents it differently</li>
+        <li>Can have unique filters, date ranges, or drill-downs</li>
+      </ul>
+    </div>
+    
+    <!-- Custom Integrations -->
+    <div class="section" id="integrations">
+      <h2><span class="icon">🔌</span> Custom Integrations</h2>
+      
+      <h3>What is it?</h3>
+      <p>A custom-built connection to a data source that doesn't have a standard connector. This involves API development, data transformation, and ongoing maintenance.</p>
+      
+      <h3>Why do you need it?</h3>
+      <p>Not every data source has a plug-and-play connector. Proprietary systems, internal databases, or niche platforms often require custom development to extract and format data for reporting.</p>
+      
+      <div class="example-box">
+        <strong>Example</strong>
+        <p>You want to include data from your custom CRM, a legacy inventory system, or a specialised industry platform. There's no off-the-shelf connector, so we build one using APIs, database queries, or file imports.</p>
+      </div>
+      
+      <h3>What's involved</h3>
+      <ul>
+        <li>API authentication and connection setup</li>
+        <li>Data extraction scripts or queries</li>
+        <li>Transformation to match your dashboard schema</li>
+        <li>Scheduling and error handling</li>
+        <li>Documentation for maintenance</li>
+      </ul>
+    </div>
+    
+    <!-- Custom Metrics / Parameters -->
+    <div class="section" id="metrics">
+      <h2><span class="icon">🧮</span> Custom Metrics / Parameters</h2>
+      
+      <h3>What are Custom Metrics?</h3>
+      <p>Calculated fields that don't exist in the raw data. These are formulas that compute new values from existing metrics - like conversion rates, cost ratios, weighted scores, or business-specific KPIs.</p>
+      
+      <h3>What are Parameters?</h3>
+      <p>User-selectable controls that change what the dashboard displays. Parameters let viewers switch between different metrics, toggle conversion types, or choose comparison periods without editing the dashboard.</p>
+      
+      <div class="example-box">
+        <strong>Custom Metric Examples</strong>
+        <p>• Cost Per Qualified Lead (Spend ÷ MQLs)<br>
+        • Blended ROAS (Revenue ÷ Total Spend across all platforms)<br>
+        • Efficiency Score (Conversions × 100 ÷ Clicks)<br>
+        • YoY Growth % ((This Year - Last Year) ÷ Last Year)</p>
+      </div>
+      
+      <div class="example-box">
+        <strong>Parameter Examples</strong>
+        <p>• Conversion selector: "Show me [App Installs / Form Submits / All Conversions]"<br>
+        • Platform filter: "Compare [Google vs Meta / All Platforms]"<br>
+        • Date granularity: "View by [Day / Week / Month]"<br>
+        • Goal toggle: "Show performance vs [Target A / Target B]"</p>
+      </div>
+      
+      <h3>Why do you need them?</h3>
+      <p>Raw platform metrics only tell part of the story. Custom metrics translate data into business language. Parameters make dashboards interactive and self-service, reducing requests for "can you make me a version that shows X?"</p>
+    </div>
+    
+    <!-- Google Sheets Layer -->
+    <div class="section" id="sheets">
+      <h2><span class="icon">📗</span> Google Sheets Layer</h2>
+      
+      <h3>What is it?</h3>
+      <p>An intermediate data processing layer using Google Sheets between your raw data sources and Looker Studio. Data flows through Sheets where it can be transformed, combined, and enriched before reaching your dashboard.</p>
+      
+      <h3>Why do you need it?</h3>
+      <p>Direct connections to Looker Studio are limited. Sheets provides a flexible transformation layer where you can:</p>
+      <ul>
+        <li>Combine data that can't be blended natively in Looker Studio</li>
+        <li>Apply complex business logic and lookups</li>
+        <li>Add manual data inputs (budgets, targets, annotations)</li>
+        <li>Create staging tables for cleaner data modeling</li>
+        <li>Build audit trails and data validation</li>
+      </ul>
+      
+      <div class="example-box">
+        <strong>When Sheets Layer is Essential</strong>
+        <p>You have conversion data from Meta that needs to be pivoted (transformed from rows to columns), joined with campaign data, enriched with classification labels, and combined with Google Ads data - all before it reaches your dashboard. Sheets makes this possible with formulas that run automatically.</p>
+      </div>
+      
+      <h3>Foundation vs Growth/Transformation</h3>
+      <p><strong>Foundation Package:</strong> Uses direct Looker Studio connectors. Simpler setup, but limited transformation capability. Best for straightforward reporting needs.</p>
+      <p><strong>Growth/Transformation Packages:</strong> Include Google Sheets layer by default. Enables advanced data manipulation, cross-platform unification, and complex business logic.</p>
+    </div>
+    
+    <div class="back-link">
+      <a href="https://dashboardquoter.growthmad.com/">← Back to Dashboard Quoter</a>
+    </div>
+  </div>
+</body>
+</html>
